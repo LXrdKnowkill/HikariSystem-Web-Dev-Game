@@ -291,12 +291,16 @@ export const useGameStore = create<GameState>()(
             set({ currentEvent: null });
         },
         setCareer: (careerId: string) => {
-            set((state) => ({
-              ...initialState, // Reset game progress
-              prestigeLevel: state.prestigeLevel, // Keep prestige level on career change
-              career: careerId,
-              technologies: getInitialTechnologies(careerId),
-            }));
+            set((state) => {
+              const prestigeLevel = state.prestigeLevel;
+              const newInitialState = {
+                ...initialState,
+                prestigeLevel,
+                career: careerId,
+                technologies: getInitialTechnologies(careerId),
+              };
+              return newInitialState;
+            });
         },
         prestige: () => {
             const { rank } = get();
