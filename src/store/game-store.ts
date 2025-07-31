@@ -47,7 +47,8 @@ interface GameState {
 const getInitialTechnologies = (careerId: string | null): Record<string, boolean> => {
     if (!careerId) return {};
     const initialTechs: Record<string, boolean> = {};
-    const startingTech = technologies.find(t => {
+    
+    const startingTechs = technologies.filter(t => {
       if (!t.career) return false;
       if (Array.isArray(t.career)) {
         return t.career.includes(careerId) && t.cost === 0;
@@ -55,9 +56,10 @@ const getInitialTechnologies = (careerId: string | null): Record<string, boolean
       return t.career === careerId && t.cost === 0;
     });
 
-    if (startingTech) {
-        initialTechs[startingTech.id] = true;
-    }
+    startingTechs.forEach(tech => {
+        initialTechs[tech.id] = true;
+    });
+    
     return initialTechs;
 }
 
@@ -265,10 +267,10 @@ export const useGameStore = create<GameState>()(
         lastEventTimestamp: state.lastEventTimestamp
       }),
       merge: (persistedState, currentState) => {
-        const state = persistedState as GameState;
+        const state = { ...(persistedState as Partial<GameState>) };
         // On merge, we need to ensure the technologies are correctly initialized
         // if a career is set but technologies are not.
-        if (state.career && Object.keys(state.technologies || {}).length === 0) {
+        if (state.career && (!state.technologies || Object.keys(state.technologies).length === 0)) {
             state.technologies = getInitialTechnologies(state.career);
         }
         return {
@@ -284,3 +286,5 @@ export const useGameStore = create<GameState>()(
 
 // Export actions separately for easy access in components
 export const useGameActions = () => useGameStore((state) => state.actions);
+
+    

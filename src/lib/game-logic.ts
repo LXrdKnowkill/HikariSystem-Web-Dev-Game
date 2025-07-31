@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -105,22 +105,33 @@ export const technologies: Technology[] = [
   { id: "tailwind", name: "Tailwind CSS", description: "Um framework CSS utility-first.", cost: 800, requiredRank: "Desenvolvedor Júnior", career: "frontend" },
   { id: "typescript_fe", name: "TypeScript (Frontend)", description: "JavaScript com tipagem estática para interfaces.", cost: 1500, requiredRank: "Desenvolvedor Pleno", career: "frontend" },
   { id: "nextjs_fe", name: "Next.js", description: "O framework React para produção.", cost: 2500, requiredRank: "Desenvolvedor Pleno", career: "frontend" },
+  { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico", career: "frontend" },
 
   // --- Backend Path ---
-  { id: "javascript_be", name: "JavaScript (Backend)", description: "Use JS para a lógica do servidor.", cost: 150, career: "backend" },
+  { id: "javascript_be", name: "JavaScript (Backend)", description: "Use JS para a lógica do servidor.", cost: 0, career: "backend" },
   { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 500, requiredRank: "Desenvolvedor Júnior", career: "backend" },
   { id: "typescript_be", name: "TypeScript (Backend)", description: "Tipagem estática para APIs robustas.", cost: 1500, requiredRank: "Desenvolvedor Pleno", career: "backend" },
   { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000, requiredRank: "Desenvolvedor Sênior", career: "backend" },
+  { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software", career: "backend" },
+
+  // --- White Hat Path ---
+  { id: "networking_wh", name: "Análise de Redes", description: "Analise o tráfego para encontrar anomalias.", cost: 0, career: "whitehat" },
+  { id: "linux_wh", name: "Linux Hardening", description: "Proteja servidores contra acessos não autorizados.", cost: 600, requiredRank: "Desenvolvedor Júnior", career: "whitehat"},
+  { id: "scripting_wh", name: "Scripting (Defensivo)", description: "Automatize a detecção de ameaças e a resposta a incidentes.", cost: 1800, requiredRank: "Desenvolvedor Pleno", career: "whitehat"},
+  { id: "yara", name: "Análise com Yara", description: "Crie regras para identificar e classificar malware.", cost: 4000, requiredRank: "Desenvolvedor Sênior", career: "whitehat" },
+  { id: "threat_intel", name: "Inteligência de Ameaças", description: "Estude táticas de adversários para prever ataques.", cost: 8000, requiredRank: "Arquiteto de Software", career: "whitehat" },
+  { id: "reverse_engineering", name: "Engenharia Reversa", description: "Desconstrua malwares para entender seu funcionamento.", cost: 22000, requiredRank: "Líder Técnico", career: "whitehat" },
   
-  // --- Security Path (Shared by White/Black Hat) ---
-  { id: "networking", name: "Conceitos de Rede", description: "Entenda como os dados trafegam na web.", cost: 200, career: ["whitehat", "blackhat"]},
-  { id: "linux", name: "Linux", description: "O sistema operacional preferido para servidores e segurança.", cost: 600, requiredRank: "Desenvolvedor Júnior", career: ["whitehat", "blackhat"]},
-  { id: "scripting", name: "Scripting (Python/Bash)", description: "Automatize tarefas de segurança e exploits.", cost: 1800, requiredRank: "Desenvolvedor Pleno", career: ["whitehat", "blackhat"]},
-  
+  // --- Black Hat Path ---
+  { id: "networking_bh", name: "Spoofing de Rede", description: "Mascare sua identidade na rede.", cost: 0, career: "blackhat" },
+  { id: "linux_bh", name: "Exploração de Linux", description: "Encontre e explore fraquezas em servidores.", cost: 750, requiredRank: "Desenvolvedor Júnior", career: "blackhat"},
+  { id: "scripting_bh", name: "Scripting (Ofensivo)", description: "Crie scripts para automatizar ataques.", cost: 2000, requiredRank: "Desenvolvedor Pleno", career: "blackhat"},
+  { id: "malware_dev", name: "Desenvolvimento de Malware", description: "Crie trojans e ransomwares personalizados.", cost: 6000, requiredRank: "Desenvolvedor Sênior", career: "blackhat" },
+  { id: "zero_day", name: "Exploração de 0-Day", description: "Encontre e utilize vulnerabilidades desconhecidas.", cost: 12000, requiredRank: "Arquiteto de Software", career: "blackhat" },
+  { id: "ddos", name: "Ataques DDoS", description: "Orquestre botnets para derrubar serviços online.", cost: 30000, requiredRank: "Líder Técnico", career: "blackhat" },
+
   // --- Advanced Shared Techs ---
   { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior", career: ["frontend", "backend", "whitehat", "blackhat"] },
-  { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software", career: ["backend", "whitehat", "blackhat"] },
-  { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico", career: "frontend" },
 ];
 
 
@@ -204,6 +215,7 @@ const companyNameParts2 = ["Pixel", "Code", "Logic", "Data", "Solutions", "Dynam
 const companyNameParts3 = ["LTDA", "S.A.", "Group", "Co."];
 
 const projectTasks = [
+  // --- Frontend ---
   { task: "Construir uma landing page", baseEffort: 10, baseReward: 20, baseXp: 5, tech: "html" },
   { task: "Estilizar um site corporativo", baseEffort: 20, baseReward: 40, baseXp: 10, tech: "css" },
   { task: "Criar uma galeria interativa", baseEffort: 40, baseReward: 100, baseXp: 25, tech: "javascript_fe" },
@@ -211,20 +223,35 @@ const projectTasks = [
   { task: "Refatorar CSS com um framework utility", baseEffort: 80, baseReward: 400, baseXp: 120, tech: "tailwind", requiredRank: "Desenvolvedor Júnior" },
   { task: "Migrar uma codebase JS para ser type-safe", baseEffort: 150, baseReward: 800, baseXp: 200, tech: "typescript_fe", requiredRank: "Desenvolvedor Pleno" },
   { task: "Construir uma aplicação full-stack", baseEffort: 250, baseReward: 1500, baseXp: 400, tech: "nextjs_fe", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Desenvolver um módulo de física para um jogo de navegador", baseEffort: 2000, baseReward: 25000, baseXp: 5000, tech: "webassembly", requiredRank: "Líder Técnico" },
+  
+  // --- Backend ---
+  { task: "Implementar autenticação em uma API", baseEffort: 50, baseReward: 120, baseXp: 30, tech: "javascript_be" },
   { task: "Desenvolver uma API REST", baseEffort: 200, baseReward: 1200, baseXp: 300, tech: "nodejs", requiredRank: "Desenvolvedor Pleno" },
   { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql", requiredRank: "Desenvolvedor Sênior" },
   { task: "Otimizar a performance de renderização de um app React", baseEffort: 400, baseReward: 2500, baseXp: 600, tech: "react", requiredRank: "Desenvolvedor Sênior" },
-  { task: "Conteinerizar uma aplicação legada para deploy", baseEffort: 500, baseReward: 4000, baseXp: 800, tech: "docker", requiredRank: "Desenvolvedor Sênior" },
   { task: "Liderar a arquitetura de um sistema distribuído", baseEffort: 1000, baseReward: 10000, baseXp: 2000, tech: "nodejs", requiredRank: "Arquiteto de Software" },
   { task: "Criar um cluster Kubernetes para um microserviço", baseEffort: 1500, baseReward: 15000, baseXp: 3000, tech: "kubernetes", requiredRank: "Arquiteto de Software" },
   { task: "Gerenciar uma migração de API legada para GraphQL", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "graphql", requiredRank: "Líder Técnico" },
-  { task: "Desenvolver um módulo de física para um jogo de navegador", baseEffort: 2000, baseReward: 25000, baseXp: 5000, tech: "webassembly", requiredRank: "Líder Técnico" },
+
+  // --- White Hat ---
+  { task: "Analisar um dump de tráfego de rede", baseEffort: 60, baseReward: 150, baseXp: 40, tech: "networking_wh" },
+  { task: "Realizar uma auditoria de segurança em um servidor Linux", baseEffort: 220, baseReward: 1400, baseXp: 350, tech: "linux_wh", requiredRank: "Desenvolvedor Júnior" },
+  { task: "Escrever um script para detectar tentativas de login suspeitas", baseEffort: 350, baseReward: 2200, baseXp: 550, tech: "scripting_wh", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Identificar uma nova família de malware com regras Yara", baseEffort: 700, baseReward: 6000, baseXp: 1200, tech: "yara", requiredRank: "Desenvolvedor Sênior" },
+  { task: "Criar um relatório de inteligência sobre um grupo de hackers", baseEffort: 1400, baseReward: 14000, baseXp: 2800, tech: "threat_intel", requiredRank: "Arquiteto de Software" },
+  { task: "Fazer engenharia reversa em um ransomware para criar um decodificador", baseEffort: 2500, baseReward: 30000, baseXp: 6000, tech: "reverse_engineering", requiredRank: "Líder Técnico" },
+
+  // --- Black Hat ---
+  { task: "Configurar um proxy para mascarar o tráfego de rede", baseEffort: 70, baseReward: 180, baseXp: 20, tech: "networking_bh" },
+  { task: "Escalar privilégios em um servidor Linux mal configurado", baseEffort: 280, baseReward: 1800, baseXp: 150, tech: "linux_bh", requiredRank: "Desenvolvedor Júnior", isHighRisk: true },
+  { task: "Desenvolver um script para colher credenciais de login", baseEffort: 400, baseReward: 3000, baseXp: 250, tech: "scripting_bh", requiredRank: "Desenvolvedor Pleno", isHighRisk: true },
+  { task: "Criar um ransomware e vendê-lo na dark web", baseEffort: 800, baseReward: 15000, baseXp: 800, tech: "malware_dev", requiredRank: "Desenvolvedor Sênior", isHighRisk: true },
+  { task: "Vender uma vulnerabilidade 0-day recém descoberta", baseEffort: 1600, baseReward: 50000, baseXp: 2000, tech: "zero_day", requiredRank: "Arquiteto de Software", isHighRisk: true },
+  { task: "Lançar um ataque DDoS contra uma grande corporação", baseEffort: 3000, baseReward: 100000, baseXp: 4000, tech: "ddos", requiredRank: "Líder Técnico", isHighRisk: true },
   
-  // Security Projects
-  { task: "Encontrar falhas em um sistema bancário (Bug Bounty)", baseEffort: 600, baseReward: 5000, baseXp: 1000, tech: "scripting", requiredRank: "Desenvolvedor Sênior", career: "whitehat" },
-  { task: "Realizar teste de penetração em uma rede corporativa", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "linux", requiredRank: "Arquiteto de Software", career: "whitehat" },
-  { task: "Invadir um sistema de e-commerce e desviar fundos", baseEffort: 700, baseReward: 10000, baseXp: 500, tech: "scripting", requiredRank: "Desenvolvedor Sênior", career: "blackhat", isHighRisk: true },
-  { task: "Criar uma botnet para minerar criptomoedas", baseEffort: 1500, baseReward: 25000, baseXp: 1000, tech: "docker", requiredRank: "Arquiteto de Software", career: "blackhat", isHighRisk: true },
+  // --- Shared ---
+  { task: "Conteinerizar uma aplicação legada para deploy", baseEffort: 500, baseReward: 4000, baseXp: 800, tech: "docker", requiredRank: "Desenvolvedor Sênior" },
 ];
 
 export const gameEvents: GameEvent[] = [
@@ -337,7 +364,14 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string, up
   const currentRankIndex = ranks.findIndex(r => r.name === currentRank);
   
   // Filter projects by career (or show general projects)
-  const availableTasksByCareer = projectTasks.filter(p => !p.career || p.career === career);
+  const availableTasksByCareer = projectTasks.filter(p => {
+    const techDetails = technologies.find(t => t.id === p.tech);
+    if (!techDetails?.career) return false; // Should not happen if data is correct
+    if (Array.isArray(techDetails.career)) {
+        return techDetails.career.includes(career!);
+    }
+    return techDetails.career === career;
+  });
 
   const availableTasksByTech = availableTasksByCareer.filter(p => ownedTechs.includes(p.tech));
   
@@ -362,19 +396,16 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string, up
           effort *= (1 - optimizationUpgrade.levels[optimizationLevel - 1].effect);
       }
   }
-  
-  // Find a default task if no specific one is available.
-  const defaultTask = projectTasks.find(t => t.tech === "html") || projectTasks[0];
 
   return {
     company,
-    task: taskTemplate?.task || defaultTask.task,
-    effort: taskTemplate?.baseEffort ? taskTemplate.baseEffort * (1 + levelMultiplier * 0.2) : defaultTask.baseEffort,
-    reward: taskTemplate?.baseReward ? taskTemplate.baseReward * (1 + levelMultiplier * 0.3) : defaultTask.baseReward,
-    xp: taskTemplate?.baseXp ? taskTemplate.baseXp * (1 + levelMultiplier * 0.25) : defaultTask.baseXp,
+    task: taskTemplate.task,
+    effort,
+    reward: taskTemplate.baseReward * (1 + levelMultiplier * 0.3),
+    xp: taskTemplate.baseXp * (1 + levelMultiplier * 0.25),
     progress: 0,
-    techRequirement: taskTemplate?.tech || defaultTask.tech,
-    isHighRisk: taskTemplate?.isHighRisk || false
+    techRequirement: taskTemplate.tech,
+    isHighRisk: taskTemplate.isHighRisk || false
   };
 };
 
@@ -410,3 +441,5 @@ export const getUpgradeById = (id: string): Upgrade | undefined => {
 export const getRank = (xp: number): string => {
     return ranks.slice().reverse().find(r => xp >= r.xpRequired)?.name || ranks[0].name;
 }
+
+    
