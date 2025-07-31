@@ -7,9 +7,12 @@ export const useIsHydrated = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // A trick to wait for rehydration to complete
-    const unsub = useGameStore.persist.onRehydrate(() => setIsHydrated(true));
+    const unsub = useGameStore.persist.onHasHydrated(() => {
+      setIsHydrated(true);
+    });
+
     setIsHydrated(useGameStore.persist.hasHydrated());
+
     return () => {
       unsub();
     };
