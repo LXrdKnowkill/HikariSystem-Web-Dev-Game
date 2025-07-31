@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Zap, CheckCircle, ChevronRight, Palette, Sprout, Target } from "lucide-react";
+import { Zap, CheckCircle, ChevronRight, Palette, Sprout, Target, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
@@ -27,7 +27,7 @@ export default function UpgradesPanel() {
     const currentLevel = purchasedUpgrades[upgradeId] || 0;
     if (currentLevel >= upgrade.levels.length) {
        toast({
-        title: "Nível Máximo",
+        title: <div className="flex items-center gap-2"><CheckCircle className="h-5 w-5" /><span>Nível Máximo</span></div>,
         description: `Você já alcançou o nível máximo para ${upgrade.name}.`,
       });
       return;
@@ -38,13 +38,13 @@ export default function UpgradesPanel() {
     if (money >= cost) {
       purchaseUpgrade(upgradeId);
       toast({
-        title: "Upgrade Adquirido!",
+        title: <div className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /><span>Upgrade Adquirido!</span></div>,
         description: `Você melhorou ${upgrade.name} para o nível ${currentLevel + 1}.`,
       });
     } else {
       toast({
         variant: "destructive",
-        title: "Fundos Insuficientes",
+        title: <div className="flex items-center gap-2"><AlertCircle className="h-5 w-5" /><span>Fundos Insuficientes</span></div>,
         description: "Você precisa de mais dinheiro para comprar este upgrade.",
       });
     }

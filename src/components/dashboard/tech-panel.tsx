@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, ChevronRight, FlaskConical, Lock } from "lucide-react";
+import { CheckCircle, ChevronRight, FlaskConical, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
@@ -24,13 +24,13 @@ export default function TechPanel() {
     if (money >= cost) {
       researchTechnology(techId);
        toast({
-        title: "Pesquisa Concluída!",
+        title: <div className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /><span>Pesquisa Concluída!</span></div>,
         description: `Você aprendeu ${allTechs.find(t => t.id === techId)?.name}.`,
       });
     } else {
       toast({
         variant: "destructive",
-        title: "Fundos Insuficientes",
+        title: <div className="flex items-center gap-2"><AlertCircle className="h-5 w-5" /><span>Fundos Insuficientes</span></div>,
         description: "Você precisa de mais dinheiro para pesquisar esta tecnologia.",
       });
     }
