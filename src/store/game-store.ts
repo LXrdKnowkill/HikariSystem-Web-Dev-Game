@@ -45,11 +45,12 @@ interface GameState {
 }
 
 const getInitialTechnologies = (careerId: string | null): Record<string, boolean> => {
+    if (!careerId) return {};
     const initialTechs: Record<string, boolean> = {};
     const startingTech = technologies.find(t => {
       if (!t.career) return false;
       if (Array.isArray(t.career)) {
-        return t.career.includes(careerId!) && t.cost === 0;
+        return t.career.includes(careerId) && t.cost === 0;
       }
       return t.career === careerId && t.cost === 0;
     });
@@ -77,7 +78,6 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       ...initialState,
-      technologies: getInitialTechnologies(get().career),
       actions: {
         tick: (delta) => {
           const now = Date.now();
@@ -266,6 +266,11 @@ export const useGameStore = create<GameState>()(
       }),
       merge: (persistedState, currentState) => {
         const state = persistedState as GameState;
+        // On merge, we need to ensure the technologies are correctly initialized
+        // if a career is set but technologies are not.
+        if (state.career && Object.keys(state.technologies || {}).length === 0) {
+            state.technologies = getInitialTechnologies(state.career);
+        }
         return {
           ...currentState,
           ...state,
