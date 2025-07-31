@@ -2,10 +2,10 @@
 
 import { useGameStore } from "@/store/game-store";
 import { Card, CardContent } from "@/components/ui/card";
-import { DollarSign, BarChart, BrainCircuit, Star } from "lucide-react";
+import { DollarSign, BarChart, BrainCircuit, Star, Gem } from "lucide-react";
 
 export default function GameStats() {
-  const { money, xp, level, rank } = useGameStore();
+  const { money, xp, level, rank, prestigeLevel } = useGameStore();
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -20,7 +20,7 @@ export default function GameStats() {
   return (
     <Card>
        <CardContent className="pt-6">
-        <div className="flex items-center justify-center mb-4 text-center">
+        <div className="flex items-center justify-between mb-4 text-center">
             <div className="p-4 bg-muted/50 rounded-lg flex flex-col items-center justify-center w-full">
                 <Star className="h-6 w-6 mb-2 text-primary" />
                 <span className="text-2xl font-bold font-headline">
@@ -28,6 +28,15 @@ export default function GameStats() {
                 </span>
                 <span className="text-sm text-muted-foreground">Cargo Atual</span>
             </div>
+            {prestigeLevel > 0 && (
+                <div className="p-4 bg-muted/50 rounded-lg flex flex-col items-center justify-center w-full ml-4">
+                    <Gem className="h-6 w-6 mb-2 text-yellow-400" />
+                    <span className="text-2xl font-bold font-headline">
+                        {prestigeLevel}
+                    </span>
+                    <span className="text-sm text-muted-foreground">Prestígio</span>
+                </div>
+            )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
           <div className="p-4 bg-muted/50 rounded-lg flex flex-col items-center justify-center">

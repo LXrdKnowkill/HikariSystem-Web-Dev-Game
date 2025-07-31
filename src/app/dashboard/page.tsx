@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { careers, GameEventOption } from "@/lib/game-logic";
+import { careers, GameEventOption, ranks } from "@/lib/game-logic";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
@@ -24,14 +24,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
-import { FlaskConical, Zap } from "lucide-react";
+import { FlaskConical, Zap, Gem } from "lucide-react";
 
 export default function DashboardPage() {
   useGameLoop();
   const router = useRouter();
   const isHydrated = useIsHydrated();
-  const { reset, applyEvent, clearEvent } = useGameActions();
-  const { career, currentEvent } = useGameStore();
+  const { reset, applyEvent, clearEvent, prestige } = useGameActions();
+  const { career, currentEvent, rank } = useGameStore();
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   useEffect(() => {
@@ -53,8 +53,13 @@ export default function DashboardPage() {
         setIsEventModalOpen(false);
       }
   };
+  
+  const handlePrestige = () => {
+    prestige();
+  }
 
   const currentCareer = careers.find(c => c.id === career);
+  const canPrestige = rank === ranks[ranks.length - 1].name;
 
   if (!isHydrated || !career) {
     return <DashboardSkeleton />;
@@ -70,12 +75,20 @@ export default function DashboardPage() {
               {currentCareer?.name || "Dev Web Ocioso"}
             </h1>
           </div>
-          <Button variant="outline" size="sm" onClick={() => {
-            reset();
-            router.push('/');
-          }}>
-             Reiniciar Jogo
-          </Button>
+          <div className="flex items-center gap-2">
+            {canPrestige && (
+               <Button variant="secondary" onClick={handlePrestige}>
+                  <Gem className="mr-2 h-4 w-4" />
+                  Prestigiar
+               </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={() => {
+              reset();
+              router.push('/');
+            }}>
+               Reiniciar Jogo
+            </Button>
+          </div>
         </header>
 
         <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">

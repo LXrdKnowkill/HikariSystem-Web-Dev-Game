@@ -21,12 +21,14 @@ import {
 const BASE_EVENT_CHANCE = 0.05; // 5% chance per tick
 const EVENT_COOLDOWN = 60 * 1000; // 60 seconds
 const BASE_RISK_CHANCE = 0.4; // 40% chance of getting caught for black hat projects
+const PRESTIGE_XP_BONUS_PER_LEVEL = 0.10; // 10% bonus XP per prestige level
 
 interface GameState {
   money: number;
   xp: number;
   level: number;
   rank: string;
+  prestigeLevel: number;
   technologies: Record<string, boolean>;
   upgrades: Record<string, number>; // upgradeId: level
   currentProject: Project | null;
@@ -42,6 +44,7 @@ interface GameState {
     applyEvent: (effects: GameEventOption['effects'] | undefined) => void;
     clearEvent: () => void;
     reset: () => void;
+    prestige: () => void;
   };
 }
 
@@ -69,6 +72,7 @@ const initialState = {
   xp: 0,
   level: 1,
   rank: ranks[0].name,
+  prestigeLevel: 0,
   technologies: {},
   upgrades: {},
   currentProject: null,
@@ -136,6 +140,11 @@ export const useGameStore = create<GameState>()(
                 if(learningLevel > 0) {
                     const learningUpgrade = getUpgradeById('acceleratedLearning');
                     finalXP *= (1 + learningUpgrade!.levels[learningLevel - 1].effect);
+                }
+                
+                // --- PRESTIGE BONUS ---
+                if (state.prestigeLevel > 0) {
+                    finalXP *= (1 + state.prestigeLevel * PRESTIGE_XP_BONUS_PER_LEVEL);
                 }
 
 
@@ -271,6 +280,17 @@ export const useGameStore = create<GameState>()(
               technologies: getInitialTechnologies(careerId),
             });
         },
+        prestige: () => {
+            const { rank } = get();
+            if (rank === ranks[ranks.length - 1].name) {
+                set(state => ({
+                    ...initialState,
+                    career: state.career, // Keep career
+                    prestigeLevel: state.prestigeLevel + 1, // Increase prestige level
+                    technologies: getInitialTechnologies(state.career), // Reset techs for career
+                }));
+            }
+        },
         reset: () => {
           set(state => ({
             ...initialState,
@@ -291,6 +311,7 @@ export const useGameStore = create<GameState>()(
         xp: state.xp,
         level: state.level,
         rank: state.rank,
+        prestigeLevel: state.prestigeLevel,
         technologies: state.technologies,
         upgrades: state.upgrades,
         currentProject: state.currentProject,
@@ -298,7 +319,7 @@ export const useGameStore = create<GameState>()(
         lastEventTimestamp: state.lastEventTimestamp
       }),
       merge: (persistedState, currentState) => {
-        const state = { ...(persistedState as Partial<GameState>) };
+        const state = { ...initialState, ...(persistedState as Partial<GameState>) };
         // On merge, we need to ensure the technologies are correctly initialized
         // if a career is set but technologies are not.
         if (state.career && (!state.technologies || Object.keys(state.technologies).length === 0)) {
@@ -317,5 +338,3 @@ export const useGameStore = create<GameState>()(
 
 // Export actions separately for easy access in components
 export const useGameActions = () => useGameStore((state) => state.actions);
-
-    
