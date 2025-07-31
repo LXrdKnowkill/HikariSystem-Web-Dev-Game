@@ -39,16 +39,15 @@ export default function TechPanel() {
   const currentRankIndex = ranks.findIndex(r => r.name === rank);
 
   return (
-    <Card className="shadow-lg h-full border-0">
+    <Card className="shadow-lg h-full border-0 rounded-t-none">
       <CardHeader>
         <div className="flex items-center gap-3">
-            <FlaskConical className="h-6 w-6 text-primary" />
-            <CardTitle className="font-headline">Tecnologias</CardTitle>
+            <CardTitle className="font-headline sr-only">Tecnologias</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
         <TooltipProvider>
-          <ScrollArea className="h-[55vh]">
+          <ScrollArea className="h-[calc(100vh-280px)]">
             <div className="flex flex-col gap-2 pr-4">
               {allTechs.map((tech, index) => {
                 const requiredRankIndex = tech.requiredRank ? ranks.findIndex(r => r.name === tech.requiredRank) : -1;

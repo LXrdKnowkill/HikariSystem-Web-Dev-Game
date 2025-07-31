@@ -15,7 +15,7 @@ import {
 } from "@/lib/game-logic";
 
 // Constants
-const BASE_EVENT_CHANCE = 0.1; // 10% chance per tick
+const BASE_EVENT_CHANCE = 0.05; // 5% chance per tick
 const EVENT_COOLDOWN = 60 * 1000; // 60 seconds
 
 interface GameState {
@@ -61,7 +61,7 @@ export const useGameStore = create<GameState>()(
       actions: {
         tick: (delta) => {
           const now = Date.now();
-          const { currentProject, technologies, lastEventTimestamp, career, upgrades } = get();
+          const { currentProject, technologies, lastEventTimestamp, career, upgrades, currentEvent } = get();
           
           // Project progress logic
           if (currentProject) {
@@ -85,7 +85,7 @@ export const useGameStore = create<GameState>()(
               );
 
               if (newProgress >= state.currentProject.effort) {
-                const newXP = state.xp + state.currentProject.reward;
+                const newXP = state.xp + state.currentProject.xp;
                 const newLevel = Math.floor(Math.pow(newXP / 100, 0.7)) + 1;
                 const newRank = getRank(newXP);
 
@@ -109,7 +109,7 @@ export const useGameStore = create<GameState>()(
           const goodLuckUpgrade = getUpgradeById('goodLuck');
           const luckBonus = goodLuckLevel > 0 ? goodLuckUpgrade!.levels[goodLuckLevel-1].effect : 0;
           
-          if (now - lastEventTimestamp > EVENT_COOLDOWN && Math.random() < BASE_EVENT_CHANCE) {
+          if (now - lastEventTimestamp > EVENT_COOLDOWN && Math.random() < BASE_EVENT_CHANCE && !currentEvent) {
               const newEvent = generateRandomEvent(career, luckBonus);
               set({ currentEvent: newEvent, lastEventTimestamp: now });
           }

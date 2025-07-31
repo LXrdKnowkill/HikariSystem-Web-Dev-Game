@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Card } from "@/components/ui/card";
 import { FlaskConical, Zap } from "lucide-react";
 
 export default function DashboardPage() {
@@ -84,15 +85,15 @@ export default function DashboardPage() {
           </div>
           <div className="lg:col-span-1">
              <Card className="shadow-lg h-full">
-              <Tabs defaultValue="tech">
+              <Tabs defaultValue="tech" className="h-full flex flex-col">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="tech"><FlaskConical className="mr-2 h-4 w-4" /> Tecnologias</TabsTrigger>
                   <TabsTrigger value="upgrades"><Zap className="mr-2 h-4 w-4"/>Upgrades</TabsTrigger>
                 </TabsList>
-                <TabsContent value="tech">
+                <TabsContent value="tech" className="flex-grow">
                   <TechPanel />
                 </TabsContent>
-                <TabsContent value="upgrades">
+                <TabsContent value="upgrades" className="flex-grow">
                   <UpgradesPanel />
                 </TabsContent>
               </Tabs>
@@ -134,7 +135,7 @@ function DashboardSkeleton() {
           <Skeleton className="h-64 w-full rounded-lg" />
         </div>
         <div className="lg:col-span-1">
-          <Skeleton className="h-96 w-full rounded-lg" />
+          <Skeleton className="h-[calc(100vh-200px)] w-full rounded-lg" />
         </div>
       </main>
     </div>

@@ -51,16 +51,15 @@ export default function UpgradesPanel() {
   };
 
   return (
-    <Card className="shadow-lg h-full border-0">
-      <CardHeader>
+    <Card className="shadow-lg h-full border-0 rounded-t-none">
+       <CardHeader>
         <div className="flex items-center gap-3">
-            <Zap className="h-6 w-6 text-primary" />
-            <CardTitle className="font-headline">Upgrades Passivos</CardTitle>
+            <CardTitle className="font-headline sr-only">Upgrades Passivos</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-0">
         <TooltipProvider>
-          <ScrollArea className="h-[55vh]">
+          <ScrollArea className="h-[calc(100vh-280px)]">
             <div className="flex flex-col gap-2 pr-4">
               {allUpgrades.map((upgrade, index) => {
                 const currentLevel = purchasedUpgrades[upgrade.id] || 0;

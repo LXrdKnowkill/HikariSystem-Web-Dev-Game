@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Heart, Dices } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -97,12 +97,12 @@ export const technologies: Technology[] = [
   { id: "html", name: "HTML", description: "A espinha dorsal da web.", cost: 0 },
   { id: "css", name: "CSS", description: "Para deixar as coisas bonitas.", cost: 50 },
   { id: "javascript", name: "JavaScript", description: "Adicione interatividade aos sites.", cost: 200 },
-  { id: "react", name: "React", description: "Uma poderosa biblioteca baseada em componentes.", cost: 1000 },
-  { id: "tailwind", name: "Tailwind CSS", description: "Um framework CSS utility-first.", cost: 800 },
-  { id: "typescript", name: "TypeScript", description: "JavaScript com tipagem estática.", cost: 1500 },
-  { id: "nextjs", name: "Next.js", description: "O framework React para produção.", cost: 2500 },
-  { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 2000 },
-  { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000 },
+  { id: "react", name: "React", description: "Uma poderosa biblioteca baseada em componentes.", cost: 1000, requiredRank: "Desenvolvedor Júnior" },
+  { id: "tailwind", name: "Tailwind CSS", description: "Um framework CSS utility-first.", cost: 800, requiredRank: "Desenvolvedor Júnior" },
+  { id: "typescript", name: "TypeScript", description: "JavaScript com tipagem estática.", cost: 1500, requiredRank: "Desenvolvedor Pleno" },
+  { id: "nextjs", name: "Next.js", description: "O framework React para produção.", cost: 2500, requiredRank: "Desenvolvedor Pleno" },
+  { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 2000, requiredRank: "Desenvolvedor Pleno" },
+  { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000, requiredRank: "Desenvolvedor Sênior" },
   { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior" },
   { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software" },
   { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico" },
