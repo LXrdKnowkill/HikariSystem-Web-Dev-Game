@@ -39,7 +39,7 @@ export default function TechPanel() {
   const currentRankIndex = ranks.findIndex(r => r.name === rank);
 
   return (
-    <Card className="shadow-lg h-full">
+    <Card className="shadow-lg h-full border-0">
       <CardHeader>
         <div className="flex items-center gap-3">
             <FlaskConical className="h-6 w-6 text-primary" />
@@ -48,7 +48,7 @@ export default function TechPanel() {
       </CardHeader>
       <CardContent>
         <TooltipProvider>
-          <ScrollArea className="h-[60vh]">
+          <ScrollArea className="h-[55vh]">
             <div className="flex flex-col gap-2 pr-4">
               {allTechs.map((tech, index) => {
                 const requiredRankIndex = tech.requiredRank ? ranks.findIndex(r => r.name === tech.requiredRank) : -1;

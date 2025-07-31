@@ -9,11 +9,13 @@ import {
   GameEvent,
   generateRandomEvent,
   getRank,
-  ranks
+  ranks,
+  Upgrade,
+  getUpgradeById
 } from "@/lib/game-logic";
 
 // Constants
-const EVENT_CHANCE = 0.1; // 10% chance per tick
+const BASE_EVENT_CHANCE = 0.1; // 10% chance per tick
 const EVENT_COOLDOWN = 60 * 1000; // 60 seconds
 
 interface GameState {
@@ -22,6 +24,7 @@ interface GameState {
   level: number;
   rank: string;
   technologies: Record<string, boolean>;
+  upgrades: Record<string, number>; // upgradeId: level
   currentProject: Project | null;
   career: string | null;
   currentEvent: GameEvent | null;
@@ -30,6 +33,7 @@ interface GameState {
     tick: (delta: number) => void;
     getNewProject: () => void;
     researchTechnology: (techId: string) => void;
+    purchaseUpgrade: (upgradeId: string) => void;
     setCareer: (careerId: string) => void;
     applyEvent: (event: GameEvent) => void;
     clearEvent: () => void;
@@ -43,6 +47,7 @@ const initialState = {
   level: 1,
   rank: ranks[0].name,
   technologies: { "html": true },
+  upgrades: {},
   currentProject: null,
   career: null,
   currentEvent: null,
@@ -56,15 +61,20 @@ export const useGameStore = create<GameState>()(
       actions: {
         tick: (delta) => {
           const now = Date.now();
-          const { currentProject, technologies, lastEventTimestamp, career } = get();
+          const { currentProject, technologies, lastEventTimestamp, career, upgrades } = get();
           
           // Project progress logic
           if (currentProject) {
             const ownedTechs = Object.keys(technologies).filter(
               (id) => technologies[id]
             );
+
+            const codingSpeedLevel = upgrades['codingSpeed'] || 0;
+            const codingSpeedUpgrade = getUpgradeById('codingSpeed');
+            const speedBonus = codingSpeedLevel > 0 ? codingSpeedUpgrade!.levels[codingSpeedLevel-1].effect : 0;
+
             const techBonus = ownedTechs.length * 0.1;
-            const progressIncrease = (delta / 1000) * (1 + techBonus);
+            const progressIncrease = (delta / 1000) * (1 + techBonus + speedBonus);
 
             set((state) => {
               if (!state.currentProject) return {};
@@ -95,8 +105,12 @@ export const useGameStore = create<GameState>()(
           }
 
           // Event trigger logic
-          if (now - lastEventTimestamp > EVENT_COOLDOWN && Math.random() < EVENT_CHANCE) {
-              const newEvent = generateRandomEvent(career);
+          const goodLuckLevel = upgrades['goodLuck'] || 0;
+          const goodLuckUpgrade = getUpgradeById('goodLuck');
+          const luckBonus = goodLuckLevel > 0 ? goodLuckUpgrade!.levels[goodLuckLevel-1].effect : 0;
+          
+          if (now - lastEventTimestamp > EVENT_COOLDOWN && Math.random() < BASE_EVENT_CHANCE) {
+              const newEvent = generateRandomEvent(career, luckBonus);
               set({ currentEvent: newEvent, lastEventTimestamp: now });
           }
         },
@@ -117,6 +131,22 @@ export const useGameStore = create<GameState>()(
               money: state.money - tech.cost,
               technologies: { ...state.technologies, [techId]: true },
             }));
+          }
+        },
+        purchaseUpgrade: (upgradeId: string) => {
+          const upgrade = getUpgradeById(upgradeId);
+          if (!upgrade) return;
+
+          const currentLevel = get().upgrades[upgradeId] || 0;
+          if (currentLevel >= upgrade.levels.length) return; // Max level reached
+
+          const nextLevel = upgrade.levels[currentLevel];
+          const canAfford = get().money >= nextLevel.cost;
+          if (canAfford) {
+              set(state => ({
+                  money: state.money - nextLevel.cost,
+                  upgrades: { ...state.upgrades, [upgradeId]: currentLevel + 1 }
+              }));
           }
         },
         applyEvent: (event) => {
@@ -164,6 +194,7 @@ export const useGameStore = create<GameState>()(
         level: state.level,
         rank: state.rank,
         technologies: state.technologies,
+        upgrades: state.upgrades,
         currentProject: state.currentProject,
         career: state.career,
         lastEventTimestamp: state.lastEventTimestamp

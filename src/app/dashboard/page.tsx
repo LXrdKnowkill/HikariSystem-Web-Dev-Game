@@ -6,12 +6,14 @@ import { useIsHydrated } from "@/hooks/use-is-hydrated";
 import GameStats from "@/components/dashboard/game-stats";
 import ProjectCard from "@/components/dashboard/project-card";
 import TechPanel from "@/components/dashboard/tech-panel";
+import UpgradesPanel from "@/components/dashboard/upgrades-panel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { careers } from "@/lib/game-logic";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { FlaskConical, Zap } from "lucide-react";
 
 export default function DashboardPage() {
   useGameLoop();
@@ -80,7 +83,20 @@ export default function DashboardPage() {
             <ProjectCard />
           </div>
           <div className="lg:col-span-1">
-            <TechPanel />
+             <Card className="shadow-lg h-full">
+              <Tabs defaultValue="tech">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="tech"><FlaskConical className="mr-2 h-4 w-4" /> Tecnologias</TabsTrigger>
+                  <TabsTrigger value="upgrades"><Zap className="mr-2 h-4 w-4"/>Upgrades</TabsTrigger>
+                </TabsList>
+                <TabsContent value="tech">
+                  <TechPanel />
+                </TabsContent>
+                <TabsContent value="upgrades">
+                  <UpgradesPanel />
+                </TabsContent>
+              </Tabs>
+            </Card>
           </div>
         </main>
       </div>

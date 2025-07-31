@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Heart, Dices } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -8,8 +8,19 @@ export interface Technology {
   requiredRank?: string;
 }
 
+export interface Upgrade {
+  id: string;
+  name: string;
+  description: string;
+  icon: LucideIcon;
+  levels: {
+    cost: number;
+    effect: number;
+  }[];
+}
+
 export interface Career {
-    id: string;
+    id:string;
     name: string;
     description: string;
     icon: LucideIcon;
@@ -95,6 +106,33 @@ export const technologies: Technology[] = [
   { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior" },
   { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software" },
   { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico" },
+];
+
+export const upgrades: Upgrade[] = [
+    {
+        id: "codingSpeed",
+        name: "Velocidade de Codificação",
+        description: "Aumenta a velocidade com que você completa projetos.",
+        icon: Zap,
+        levels: [
+            { cost: 100, effect: 0.1 },
+            { cost: 500, effect: 0.2 },
+            { cost: 2000, effect: 0.3 },
+            { cost: 10000, effect: 0.4 },
+            { cost: 50000, effect: 0.5 },
+        ]
+    },
+    {
+        id: "goodLuck",
+        name: "Sorte",
+        description: "Aumenta a chance de eventos positivos acontecerem.",
+        icon: Dices,
+        levels: [
+            { cost: 500, effect: 0.05 },
+            { cost: 2500, effect: 0.10 },
+            { cost: 10000, effect: 0.15 },
+        ]
+    }
 ];
 
 const companyNameParts1 = ["Blue", "Red", "Green", "Quantum", "Hyper", "Stellar", "Lunar", "Solar"];
@@ -245,13 +283,27 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string): P
   };
 };
 
-export const generateRandomEvent = (careerId?: string | null): GameEvent => {
-    const careerSpecificEvents = careerId ? gameEvents.filter(e => e.career === careerId || !e.career) : gameEvents.filter(e => !e.career);
-    return getRandomElement(careerSpecificEvents);
+export const generateRandomEvent = (careerId?: string | null, luckBonus: number = 0): GameEvent => {
+    const isPositive = Math.random() < (0.5 + luckBonus); // Base 50% chance for positive event, modified by luck
+    
+    let potentialEvents = gameEvents.filter(e => e.type === (isPositive ? 'positive' : 'negative'));
+
+    const careerSpecificEvents = careerId ? potentialEvents.filter(e => e.career === careerId || !e.career) : potentialEvents.filter(e => !e.career);
+
+    if (careerSpecificEvents.length > 0) {
+        return getRandomElement(careerSpecificEvents);
+    }
+    // Fallback to any event of the chosen type if no career-specific one is found
+    return getRandomElement(potentialEvents);
 }
+
 
 export const getTechnologyById = (id: string): Technology | undefined => {
   return technologies.find(t => t.id === id);
+};
+
+export const getUpgradeById = (id: string): Upgrade | undefined => {
+    return upgrades.find(u => u.id === id);
 };
 
 export const getRank = (xp: number): string => {
