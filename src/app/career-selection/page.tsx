@@ -1,29 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useGameActions, useGameStore } from "@/store/game-store";
-import { careers, type Career } from "@/lib/game-logic";
+import { useGameActions } from "@/store/game-store";
+import { careers } from "@/lib/game-logic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 
 export default function CareerSelectionPage() {
   const router = useRouter();
   const { setCareer } = useGameActions();
-  const { career } = useGameStore();
-  const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
 
   const handleSelectCareer = (careerId: string) => {
-    setSelectedCareer(careerId);
+    // Define a carreira
     setCareer(careerId);
-  };
-
-  // Aguarda a atualização do estado antes de redirecionar
-  useEffect(() => {
-    if (selectedCareer && career === selectedCareer) {
+    
+    // Redireciona imediatamente
+    setTimeout(() => {
       router.push("/dashboard");
-    }
-  }, [career, selectedCareer, router]);
+    }, 50); // Pequeno delay para garantir que o estado foi salvo
+  };
 
   return (
     <main className="flex items-center justify-center min-h-screen p-4 bg-background animate-in fade-in duration-500">
@@ -48,9 +43,8 @@ export default function CareerSelectionPage() {
                 <Button 
                   className="w-full" 
                   onClick={() => handleSelectCareer(career.id)}
-                  disabled={selectedCareer === career.id}
                 >
-                  {selectedCareer === career.id ? "Selecionando..." : `Selecionar ${career.name}`}
+                  Selecionar {career.name}
                 </Button>
               </CardContent>
             </Card>

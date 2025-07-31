@@ -34,12 +34,17 @@ export default function DashboardPage() {
   const { reset, applyEvent, clearEvent, prestige } = useGameActions();
   const { career, currentEvent, rank } = useGameStore();
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
+  // Modificação: só redireciona após um delay para garantir que o estado foi carregado
   useEffect(() => {
-    if (isHydrated && !career) {
-      router.replace('/career-selection');
+    if (isHydrated && !career && !redirecting) {
+      setRedirecting(true);
+      setTimeout(() => {
+        router.replace('/career-selection');
+      }, 500); // Delay de 500ms para garantir que o estado foi carregado completamente
     }
-  }, [isHydrated, career, router]);
+  }, [isHydrated, career, router, redirecting]);
   
   useEffect(() => {
     if (currentEvent) {
@@ -62,7 +67,8 @@ export default function DashboardPage() {
   const currentCareer = careers.find(c => c.id === career);
   const canPrestige = rank === ranks[ranks.length - 1].name;
 
-  if (!isHydrated || !career) {
+  // Se ainda está carregando ou redirecionando, mostra skeleton
+  if (!isHydrated || !career || redirecting) {
     return <DashboardSkeleton />;
   }
 
