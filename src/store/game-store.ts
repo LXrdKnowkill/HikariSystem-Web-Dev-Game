@@ -11,12 +11,14 @@ import {
   getRank,
   ranks,
   Upgrade,
-  getUpgradeById
+  getUpgradeById,
+  getEventById
 } from "@/lib/game-logic";
 
 // Constants
 const BASE_EVENT_CHANCE = 0.05; // 5% chance per tick
 const EVENT_COOLDOWN = 60 * 1000; // 60 seconds
+const BASE_RISK_CHANCE = 0.4; // 40% chance of getting caught for black hat projects
 
 interface GameState {
   money: number;
@@ -85,8 +87,11 @@ export const useGameStore = create<GameState>()(
               );
 
               if (newProgress >= state.currentProject.effort) {
-                // Calculate reward bonus from upgrades
+                // Project Completion
                 let finalReward = state.currentProject.reward;
+                
+                // --- UPGRADE BONUSES ---
+                // Frontend Bonus
                 const designMasterLevel = state.upgrades['designMaster'] || 0;
                 if(designMasterLevel > 0) {
                     const designMasterUpgrade = getUpgradeById('designMaster');
@@ -95,10 +100,29 @@ export const useGameStore = create<GameState>()(
                         finalReward *= (1 + designMasterUpgrade.levels[designMasterLevel - 1].effect);
                     }
                 }
+                // Whitehat Bonus
+                const analysisToolsLevel = state.upgrades['analysisTools'] || 0;
+                if(analysisToolsLevel > 0 && state.career === 'whitehat') {
+                    const analysisToolsUpgrade = getUpgradeById('analysisTools');
+                    finalReward *= (1 + analysisToolsUpgrade!.levels[analysisToolsLevel-1].effect);
+                }
 
                 const newXP = state.xp + state.currentProject.xp;
                 const newLevel = Math.floor(Math.pow(newXP / 100, 0.7)) + 1;
                 const newRank = getRank(newXP);
+
+                // --- BLACK HAT RISK ---
+                if (state.currentProject.isHighRisk) {
+                    const anonNetworkLevel = state.upgrades['anonNetwork'] || 0;
+                    const anonNetworkUpgrade = getUpgradeById('anonNetwork');
+                    const riskReduction = anonNetworkLevel > 0 ? anonNetworkUpgrade!.levels[anonNetworkLevel - 1].effect : 0;
+                    if (Math.random() < BASE_RISK_CHANCE - riskReduction) {
+                        const traceEvent = getEventById('traced');
+                        if (traceEvent) {
+                            set({ currentEvent: traceEvent, lastEventTimestamp: Date.now() });
+                        }
+                    }
+                }
                 
                 return {
                   money: state.money + finalReward,
@@ -127,9 +151,9 @@ export const useGameStore = create<GameState>()(
         },
         getNewProject: () => {
           if (get().currentProject) return;
-          const { technologies, rank, upgrades } = get();
+          const { technologies, rank, upgrades, career } = get();
           const ownedTechs = Object.keys(technologies).filter(id => technologies[id]);
-          const newProject = generateNewProject(ownedTechs, rank, upgrades);
+          const newProject = generateNewProject(ownedTechs, rank, upgrades, career);
           set({ currentProject: newProject });
         },
         researchTechnology: (techId: string) => {
@@ -166,7 +190,8 @@ export const useGameStore = create<GameState>()(
                 let newXp = state.xp;
 
                 if(event.effects.money) {
-                    if(event.effects.money > -1 && event.effects.money < 1) {
+                    // Check if it's a percentage (between -1 and 1, but not 0)
+                    if(event.effects.money > -1 && event.effects.money < 1 && event.effects.money !== 0) {
                          newMoney += state.money * event.effects.money;
                     } else {
                         newMoney += event.effects.money;

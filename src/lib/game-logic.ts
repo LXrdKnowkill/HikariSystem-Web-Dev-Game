@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -35,6 +35,7 @@ export interface Project {
   xp: number;
   progress: number;
   techRequirement: string;
+  isHighRisk?: boolean; // For Black Hat projects
 }
 
 export interface GameEvent {
@@ -157,6 +158,30 @@ export const upgrades: Upgrade[] = [
             { cost: 8000, effect: 0.2 }, // 20% effort reduction
             { cost: 25000, effect: 0.3 }, // 30% effort reduction
         ]
+    },
+     {
+        id: "analysisTools",
+        name: "Ferramentas de Análise",
+        description: "Aumenta o pagamento de projetos de Bug Bounty.",
+        icon: Target,
+        career: "whitehat",
+        levels: [
+            { cost: 3000, effect: 0.15 },
+            { cost: 10000, effect: 0.30 },
+            { cost: 40000, effect: 0.50 },
+        ]
+    },
+    {
+        id: "anonNetwork",
+        name: "Rede Anônima",
+        description: "Reduz a chance de ser pego após uma invasão.",
+        icon: Sprout,
+        career: "blackhat",
+        levels: [
+            { cost: 5000, effect: 0.10 }, // Reduces chance by 10%
+            { cost: 20000, effect: 0.20 },
+            { cost: 100000, effect: 0.35 },
+        ]
     }
 ];
 
@@ -180,6 +205,12 @@ const projectTasks = [
   { task: "Criar um cluster Kubernetes para um microserviço", baseEffort: 1500, baseReward: 15000, baseXp: 3000, tech: "kubernetes", requiredRank: "Arquiteto de Software" },
   { task: "Gerenciar uma migração de API legada para GraphQL", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "graphql", requiredRank: "Líder Técnico" },
   { task: "Desenvolver um módulo de física para um jogo de navegador", baseEffort: 2000, baseReward: 25000, baseXp: 5000, tech: "webassembly", requiredRank: "Líder Técnico" },
+  // White Hat Projects
+  { task: "Encontrar falhas em um sistema bancário (Bug Bounty)", baseEffort: 600, baseReward: 5000, baseXp: 1000, tech: "nodejs", requiredRank: "Desenvolvedor Sênior", career: "whitehat" },
+  { task: "Realizar teste de penetração em uma rede corporativa", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "docker", requiredRank: "Arquiteto de Software", career: "whitehat" },
+  // Black Hat Projects
+  { task: "Invadir um sistema de e-commerce e desviar fundos", baseEffort: 700, baseReward: 10000, baseXp: 500, tech: "nodejs", requiredRank: "Desenvolvedor Sênior", career: "blackhat", isHighRisk: true },
+  { task: "Criar uma botnet para minerar criptomoedas", baseEffort: 1500, baseReward: 25000, baseXp: 1000, tech: "docker", requiredRank: "Arquiteto de Software", career: "blackhat", isHighRisk: true },
 ];
 
 export const gameEvents: GameEvent[] = [
@@ -275,15 +306,26 @@ export const gameEvents: GameEvent[] = [
         effects: { xp: -50 },
         career: "blackhat",
     },
+    {
+        id: "traced",
+        title: "Rastreado!",
+        description: "Sua última atividade ilegal foi rastreada pelas autoridades. Você recebeu uma multa pesada para evitar a prisão.",
+        type: "negative",
+        effects: { money: -0.25 }, // Lose 25% of money
+        career: "blackhat"
+    }
 ];
 
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-export const generateNewProject = (ownedTechs: string[], currentRank: string, upgrades: Record<string, number>): Project => {
+export const generateNewProject = (ownedTechs: string[], currentRank: string, upgrades: Record<string, number>, career: string | null): Project => {
   const currentRankIndex = ranks.findIndex(r => r.name === currentRank);
+  
+  // Filter projects by career (or show general projects)
+  const availableTasksByCareer = projectTasks.filter(p => !p.career || p.career === career);
 
-  const availableTasksByTech = projectTasks.filter(p => ownedTechs.includes(p.tech));
+  const availableTasksByTech = availableTasksByCareer.filter(p => ownedTechs.includes(p.tech));
   
   const availableTasksByRank = availableTasksByTech.filter(p => {
     if (!p.requiredRank) return true;
@@ -314,7 +356,8 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string, up
     reward: taskTemplate.baseReward * (1 + levelMultiplier * 0.3),
     xp: taskTemplate.baseXp * (1 + levelMultiplier * 0.25),
     progress: 0,
-    techRequirement: taskTemplate.tech
+    techRequirement: taskTemplate.tech,
+    isHighRisk: taskTemplate.isHighRisk
   };
 };
 
@@ -322,6 +365,9 @@ export const generateRandomEvent = (careerId?: string | null, luckBonus: number 
     const isPositive = Math.random() < (0.5 + luckBonus); // Base 50% chance for positive event, modified by luck
     
     let potentialEvents = gameEvents.filter(e => e.type === (isPositive ? 'positive' : 'negative'));
+
+    // Filter out blackhat trace event, it's special
+    potentialEvents = potentialEvents.filter(e => e.id !== 'traced');
 
     const careerSpecificEvents = careerId ? potentialEvents.filter(e => e.career === careerId || !e.career) : potentialEvents.filter(e => !e.career);
 
@@ -332,6 +378,9 @@ export const generateRandomEvent = (careerId?: string | null, luckBonus: number 
     return getRandomElement(potentialEvents);
 }
 
+export const getEventById = (id: string): GameEvent | undefined => {
+    return gameEvents.find(e => e.id === id);
+}
 
 export const getTechnologyById = (id: string): Technology | undefined => {
   return technologies.find(t => t.id === id);
