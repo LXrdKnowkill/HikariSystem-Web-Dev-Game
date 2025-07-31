@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet, HardDrive, DraftingCompass } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet, HardDrive, DraftingCompass, Lamp, Plant, Case, Shirt, ToyBrick } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -64,6 +64,15 @@ export interface GameEvent {
 export interface Rank {
   name: string;
   xpRequired: number;
+}
+
+export interface OfficeItem {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  icon: LucideIcon;
+  type: 'cosmetic' | 'functional';
 }
 
 export const ranks: Rank[] = [
@@ -274,6 +283,14 @@ export const upgrades: Upgrade[] = [
             { cost: 100000, effect: 0.35 },
         ]
     }
+];
+
+export const officeItems: OfficeItem[] = [
+  { id: 'office_plant', name: 'Planta de Escritório', description: 'Um pouco de verde para alegrar o ambiente. Totalmente cosmético.', cost: 1500, icon: Plant, type: 'cosmetic' },
+  { id: 'motivational_poster', name: 'Pôster Motivacional', description: '"Feito é melhor que perfeito". Aumenta a moral.', cost: 750, icon: Case, type: 'cosmetic' },
+  { id: 'lava_lamp', name: 'Luminária de Lava', description: 'Hipnótica e calmante. Ótima para pensar.', cost: 2500, icon: Lamp, type: 'cosmetic' },
+  { id: 'nerd_figure', name: 'Action Figure Nerd', description: 'Um pequeno herói para sua mesa.', cost: 5000, icon: ToyBrick, type: 'cosmetic' },
+  { id: 'company_shirt', name: 'Camiseta da Empresa', description: 'Vista a camisa, literalmente.', cost: 1000, icon: Shirt, type: 'cosmetic' },
 ];
 
 const companyNameParts1 = ["Blue", "Red", "Green", "Quantum", "Hyper", "Stellar", "Lunar", "Solar"];
@@ -508,6 +525,10 @@ export const getTechnologyById = (id: string): Technology | undefined => {
 
 export const getUpgradeById = (id: string): Upgrade | undefined => {
     return upgrades.find(u => u.id === id);
+};
+
+export const getOfficeItemById = (id: string): OfficeItem | undefined => {
+    return officeItems.find(i => i.id === id);
 };
 
 export const getRank = (xp: number): string => {

@@ -14,7 +14,9 @@ import {
   Upgrade,
   getUpgradeById,
   getEventById,
-  technologies
+  technologies,
+  OfficeItem,
+  getOfficeItemById,
 } from "@/lib/game-logic";
 
 // Constants
@@ -31,6 +33,7 @@ interface GameState {
   prestigeLevel: number;
   technologies: Record<string, boolean>;
   upgrades: Record<string, number>; // upgradeId: level
+  officeItems: Record<string, boolean>; // officeItemId: owned
   currentProject: Project | null;
   career: string | null;
   currentEvent: GameEvent | null;
@@ -40,6 +43,7 @@ interface GameState {
     getNewProject: () => void;
     researchTechnology: (techId: string) => void;
     purchaseUpgrade: (upgradeId: string) => void;
+    purchaseOfficeItem: (itemId: string) => void;
     setCareer: (careerId: string) => void;
     applyEvent: (effects: GameEventOption['effects'] | undefined) => void;
     clearEvent: () => void;
@@ -75,6 +79,7 @@ const initialState = {
   prestigeLevel: 0,
   technologies: {},
   upgrades: {},
+  officeItems: {},
   currentProject: null,
   career: null,
   currentEvent: null,
@@ -242,6 +247,18 @@ export const useGameStore = create<GameState>()(
               }));
           }
         },
+        purchaseOfficeItem: (itemId: string) => {
+          const item = getOfficeItemById(itemId);
+          if (!item || get().officeItems[itemId]) return;
+
+          const canAfford = get().money >= item.cost;
+          if(canAfford) {
+            set((state) => ({
+              money: state.money - item.cost,
+              officeItems: { ...state.officeItems, [itemId]: true },
+            }));
+          }
+        },
         applyEvent: (effects) => {
             if (!effects) return;
             
@@ -316,6 +333,7 @@ export const useGameStore = create<GameState>()(
         prestigeLevel: state.prestigeLevel,
         technologies: state.technologies,
         upgrades: state.upgrades,
+        officeItems: state.officeItems,
         currentProject: state.currentProject,
         career: state.career,
         lastEventTimestamp: state.lastEventTimestamp,

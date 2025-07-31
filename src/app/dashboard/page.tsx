@@ -7,6 +7,7 @@ import GameStats from "@/components/dashboard/game-stats";
 import ProjectCard from "@/components/dashboard/project-card";
 import TechPanel from "@/components/dashboard/tech-panel";
 import UpgradesPanel from "@/components/dashboard/upgrades-panel";
+import OfficePanel from "@/components/dashboard/office-panel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
@@ -24,7 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
-import { FlaskConical, Zap, Gem } from "lucide-react";
+import { FlaskConical, Zap, Gem, Armchair } from "lucide-react";
 
 export default function DashboardPage() {
   useGameLoop();
@@ -99,15 +100,19 @@ export default function DashboardPage() {
           <div className="lg:col-span-1">
              <Card className="shadow-lg h-full">
               <Tabs defaultValue="tech" className="h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="tech"><FlaskConical className="mr-2 h-4 w-4" /> Tecnologias</TabsTrigger>
                   <TabsTrigger value="upgrades"><Zap className="mr-2 h-4 w-4"/>Upgrades</TabsTrigger>
+                  <TabsTrigger value="office"><Armchair className="mr-2 h-4 w-4"/>Escritório</TabsTrigger>
                 </TabsList>
                 <TabsContent value="tech" className="flex-grow">
                   <TechPanel />
                 </TabsContent>
                 <TabsContent value="upgrades" className="flex-grow">
                   <UpgradesPanel />
+                </TabsContent>
+                 <TabsContent value="office" className="flex-grow">
+                  <OfficePanel />
                 </TabsContent>
               </Tabs>
             </Card>
