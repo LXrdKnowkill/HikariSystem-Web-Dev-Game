@@ -1,4 +1,5 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet, HardDrive, DraftingCompass, Lamp, Plant, Case, Shirt, ToyBrick } from "lucide-react";
+
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet, HardDrive, DraftingCompass, Lamp, FileText, Shirt, ToyBrick } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -286,8 +287,8 @@ export const upgrades: Upgrade[] = [
 ];
 
 export const officeItems: OfficeItem[] = [
-  { id: 'office_plant', name: 'Planta de Escritório', description: 'Um pouco de verde para alegrar o ambiente. Totalmente cosmético.', cost: 1500, icon: Plant, type: 'cosmetic' },
-  { id: 'motivational_poster', name: 'Pôster Motivacional', description: '"Feito é melhor que perfeito". Aumenta a moral.', cost: 750, icon: Case, type: 'cosmetic' },
+  { id: 'office_plant', name: 'Planta de Escritório', description: 'Um pouco de verde para alegrar o ambiente. Totalmente cosmético.', cost: 1500, icon: Sprout, type: 'cosmetic' },
+  { id: 'motivational_poster', name: 'Pôster Motivacional', description: '"Feito é melhor que perfeito". Aumenta a moral.', cost: 750, icon: FileText, type: 'cosmetic' },
   { id: 'lava_lamp', name: 'Luminária de Lava', description: 'Hipnótica e calmante. Ótima para pensar.', cost: 2500, icon: Lamp, type: 'cosmetic' },
   { id: 'nerd_figure', name: 'Action Figure Nerd', description: 'Um pequeno herói para sua mesa.', cost: 5000, icon: ToyBrick, type: 'cosmetic' },
   { id: 'company_shirt', name: 'Camiseta da Empresa', description: 'Vista a camisa, literalmente.', cost: 1000, icon: Shirt, type: 'cosmetic' },
@@ -534,5 +535,7 @@ export const getOfficeItemById = (id: string): OfficeItem | undefined => {
 export const getRank = (xp: number): string => {
     return ranks.slice().reverse().find(r => xp >= r.xpRequired)?.name || ranks[0].name;
 }
+
+    
 
     
