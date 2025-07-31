@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -17,6 +17,7 @@ export interface Upgrade {
     cost: number;
     effect: number;
   }[];
+  career?: string; // Add career requirement
 }
 
 export interface Career {
@@ -131,6 +132,18 @@ export const upgrades: Upgrade[] = [
             { cost: 500, effect: 0.05 },
             { cost: 2500, effect: 0.10 },
             { cost: 10000, effect: 0.15 },
+        ]
+    },
+    {
+        id: "designMaster",
+        name: "Mestre do Design",
+        description: "Aumenta a recompensa de projetos com React e Tailwind CSS.",
+        icon: Palette,
+        career: "frontend",
+        levels: [
+            { cost: 2000, effect: 0.1 }, // 10% bonus
+            { cost: 8000, effect: 0.2 }, // 20% bonus
+            { cost: 25000, effect: 0.3 }, // 30% bonus
         ]
     }
 ];

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Zap, CheckCircle, ChevronRight } from "lucide-react";
+import { Zap, CheckCircle, ChevronRight, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function UpgradesPanel() {
-  const { money, upgrades: purchasedUpgrades } = useGameStore();
+  const { money, upgrades: purchasedUpgrades, career } = useGameStore();
   const { purchaseUpgrade } = useGameActions();
   const { toast } = useToast();
 
@@ -50,6 +50,8 @@ export default function UpgradesPanel() {
     }
   };
 
+  const availableUpgrades = allUpgrades.filter(u => !u.career || u.career === career);
+
   return (
     <Card className="shadow-lg h-full border-0 rounded-t-none">
        <CardHeader>
@@ -61,7 +63,7 @@ export default function UpgradesPanel() {
         <TooltipProvider>
           <ScrollArea className="h-[calc(100vh-280px)]">
             <div className="flex flex-col gap-2 pr-4">
-              {allUpgrades.map((upgrade, index) => {
+              {availableUpgrades.map((upgrade, index) => {
                 const currentLevel = purchasedUpgrades[upgrade.id] || 0;
                 const maxLevel = upgrade.levels.length;
                 const isMaxed = currentLevel >= maxLevel;
@@ -106,7 +108,7 @@ export default function UpgradesPanel() {
                         </Tooltip>
                       )}
                     </div>
-                    {index < allUpgrades.length - 1 && <Separator />}
+                    {index < availableUpgrades.length - 1 && <Separator />}
                   </div>
                 )
               })}

@@ -85,12 +85,23 @@ export const useGameStore = create<GameState>()(
               );
 
               if (newProgress >= state.currentProject.effort) {
+                // Calculate reward bonus from upgrades
+                let finalReward = state.currentProject.reward;
+                const designMasterLevel = state.upgrades['designMaster'] || 0;
+                if(designMasterLevel > 0) {
+                    const designMasterUpgrade = getUpgradeById('designMaster');
+                    const projectTech = state.currentProject.techRequirement;
+                    if(designMasterUpgrade && (projectTech === 'react' || projectTech === 'tailwind')) {
+                        finalReward *= (1 + designMasterUpgrade.levels[designMasterLevel - 1].effect);
+                    }
+                }
+
                 const newXP = state.xp + state.currentProject.xp;
                 const newLevel = Math.floor(Math.pow(newXP / 100, 0.7)) + 1;
                 const newRank = getRank(newXP);
-
+                
                 return {
-                  money: state.money + state.currentProject.reward,
+                  money: state.money + finalReward,
                   xp: newXP,
                   level: newLevel,
                   rank: newRank,
