@@ -42,15 +42,15 @@ export interface Rank {
 }
 
 export const ranks: Rank[] = [
-    { name: "Iniciante", xpRequired: 0 },
-    { name: "Desenvolvedor Júnior", xpRequired: 500 },
-    { name: "Desenvolvedor Pleno", xpRequired: 2500 },
-    { name: "Desenvolvedor Sênior", xpRequired: 10000 },
-    { name: "Arquiteto de Software", xpRequired: 30000 },
-    { name: "Líder Técnico", xpRequired: 75000 },
-    { name: "Gerente de Engenharia", xpRequired: 150000 },
-    { name: "CTO", xpRequired: 500000 },
-    { name: "Lenda do Código", xpRequired: 1000000 },
+    { name: "Iniciante", xpRequired: 0 }, // 0
+    { name: "Desenvolvedor Júnior", xpRequired: 500 }, // 1
+    { name: "Desenvolvedor Pleno", xpRequired: 2500 }, // 2
+    { name: "Desenvolvedor Sênior", xpRequired: 10000 }, // 3
+    { name: "Arquiteto de Software", xpRequired: 30000 }, // 4
+    { name: "Líder Técnico", xpRequired: 75000 }, // 5
+    { name: "Gerente de Engenharia", xpRequired: 150000 }, // 6
+    { name: "CTO", xpRequired: 500000 }, // 7
+    { name: "Lenda do Código", xpRequired: 1000000 }, // 8
 ];
 
 
@@ -101,12 +101,15 @@ const projectTasks = [
   { task: "Construir uma landing page", baseEffort: 10, baseReward: 20, baseXp: 5, tech: "html" },
   { task: "Estilizar um site corporativo", baseEffort: 20, baseReward: 40, baseXp: 10, tech: "css" },
   { task: "Criar uma galeria interativa", baseEffort: 40, baseReward: 100, baseXp: 25, tech: "javascript" },
-  { task: "Desenvolver uma aplicação de página única (SPA)", baseEffort: 100, baseReward: 500, baseXp: 150, tech: "react" },
-  { task: "Refatorar CSS com um framework utility", baseEffort: 80, baseReward: 400, baseXp: 120, tech: "tailwind" },
-  { task: "Migrar uma codebase JS para ser type-safe", baseEffort: 150, baseReward: 800, baseXp: 200, tech: "typescript" },
-  { task: "Construir uma aplicação full-stack", baseEffort: 250, baseReward: 1500, baseXp: 400, tech: "nextjs" },
-  { task: "Desenvolver uma API REST", baseEffort: 200, baseReward: 1200, baseXp: 300, tech: "nodejs" },
-  { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql" },
+  { task: "Desenvolver uma aplicação de página única (SPA)", baseEffort: 100, baseReward: 500, baseXp: 150, tech: "react", requiredRank: "Desenvolvedor Júnior" },
+  { task: "Refatorar CSS com um framework utility", baseEffort: 80, baseReward: 400, baseXp: 120, tech: "tailwind", requiredRank: "Desenvolvedor Júnior" },
+  { task: "Migrar uma codebase JS para ser type-safe", baseEffort: 150, baseReward: 800, baseXp: 200, tech: "typescript", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Construir uma aplicação full-stack", baseEffort: 250, baseReward: 1500, baseXp: 400, tech: "nextjs", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Desenvolver uma API REST", baseEffort: 200, baseReward: 1200, baseXp: 300, tech: "nodejs", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql", requiredRank: "Desenvolvedor Sênior" },
+  { task: "Otimizar a performance de renderização de um app React", baseEffort: 400, baseReward: 2500, baseXp: 600, tech: "react", requiredRank: "Desenvolvedor Sênior" },
+  { task: "Liderar a arquitetura de um sistema distribuído", baseEffort: 1000, baseReward: 10000, baseXp: 2000, tech: "nodejs", requiredRank: "Arquiteto de Software" },
+  { task: "Gerenciar uma migração de API legada para GraphQL", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "graphql", requiredRank: "Líder Técnico" },
 ];
 
 export const gameEvents: GameEvent[] = [
@@ -207,11 +210,20 @@ export const gameEvents: GameEvent[] = [
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-export const generateNewProject = (ownedTechs: string[]): Project => {
-  const availableTasks = projectTasks.filter(p => ownedTechs.includes(p.tech));
-  const taskTemplate = getRandomElement(availableTasks.length > 0 ? availableTasks : [projectTasks[0]]);
+export const generateNewProject = (ownedTechs: string[], currentRank: string): Project => {
+  const currentRankIndex = ranks.findIndex(r => r.name === currentRank);
+
+  const availableTasksByTech = projectTasks.filter(p => ownedTechs.includes(p.tech));
   
-  const levelMultiplier = ownedTechs.length;
+  const availableTasksByRank = availableTasksByTech.filter(p => {
+    if (!p.requiredRank) return true;
+    const requiredRankIndex = ranks.findIndex(r => r.name === p.requiredRank);
+    return currentRankIndex >= requiredRankIndex;
+  });
+
+  const taskTemplate = getRandomElement(availableTasksByRank.length > 0 ? availableTasksByRank : [projectTasks[0]]);
+  
+  const levelMultiplier = ownedTechs.length + currentRankIndex;
   
   const company = `${getRandomElement(companyNameParts1)} ${getRandomElement(companyNameParts2)} ${getRandomElement(companyNameParts3)}`;
   
