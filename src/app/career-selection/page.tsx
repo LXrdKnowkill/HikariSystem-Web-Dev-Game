@@ -1,19 +1,29 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useGameActions } from "@/store/game-store";
+import { useGameActions, useGameStore } from "@/store/game-store";
 import { careers, type Career } from "@/lib/game-logic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 
 export default function CareerSelectionPage() {
   const router = useRouter();
   const { setCareer } = useGameActions();
+  const { career } = useGameStore();
+  const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
 
   const handleSelectCareer = (careerId: string) => {
+    setSelectedCareer(careerId);
     setCareer(careerId);
-    router.push("/dashboard");
   };
+
+  // Aguarda a atualização do estado antes de redirecionar
+  useEffect(() => {
+    if (selectedCareer && career === selectedCareer) {
+      router.push("/dashboard");
+    }
+  }, [career, selectedCareer, router]);
 
   return (
     <main className="flex items-center justify-center min-h-screen p-4 bg-background animate-in fade-in duration-500">
@@ -35,8 +45,12 @@ export default function CareerSelectionPage() {
                 <CardDescription>{career.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex items-end">
-                <Button className="w-full" onClick={() => handleSelectCareer(career.id)}>
-                    Selecionar {career.name}
+                <Button 
+                  className="w-full" 
+                  onClick={() => handleSelectCareer(career.id)}
+                  disabled={selectedCareer === career.id}
+                >
+                  {selectedCareer === career.id ? "Selecionando..." : `Selecionar ${career.name}`}
                 </Button>
               </CardContent>
             </Card>
