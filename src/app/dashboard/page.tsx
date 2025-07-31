@@ -10,21 +10,45 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { careers } from "@/lib/game-logic";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function DashboardPage() {
   useGameLoop();
   const router = useRouter();
   const isHydrated = useIsHydrated();
-  const { reset } = useGameActions();
-  const { career } = useGameStore();
+  const { reset, applyEvent, clearEvent } = useGameActions();
+  const { career, currentEvent } = useGameStore();
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   useEffect(() => {
     if (isHydrated && !career) {
       router.replace('/career-selection');
     }
   }, [isHydrated, career, router]);
+  
+  useEffect(() => {
+    if (currentEvent) {
+      setIsEventModalOpen(true);
+    }
+  }, [currentEvent]);
+
+  const handleCloseEventModal = () => {
+      if(currentEvent) {
+        applyEvent(currentEvent);
+        clearEvent();
+        setIsEventModalOpen(false);
+      }
+  };
 
   const currentCareer = careers.find(c => c.id === career);
 
@@ -33,32 +57,48 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      <header className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-3">
-          {currentCareer && <currentCareer.icon className="h-8 w-8 text-primary" />}
-          <h1 className="text-2xl md:text-3xl font-headline font-bold">
-            {currentCareer?.name || "Dev Web Ocioso"}
-          </h1>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => {
-          reset();
-          router.push('/');
-        }}>
-           Reiniciar Jogo
-        </Button>
-      </header>
+    <>
+      <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
+        <header className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+            {currentCareer && <currentCareer.icon className="h-8 w-8 text-primary" />}
+            <h1 className="text-2xl md:text-3xl font-headline font-bold">
+              {currentCareer?.name || "Dev Web Ocioso"}
+            </h1>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => {
+            reset();
+            router.push('/');
+          }}>
+             Reiniciar Jogo
+          </Button>
+        </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 flex flex-col gap-8">
-          <GameStats />
-          <ProjectCard />
-        </div>
-        <div className="lg:col-span-1">
-          <TechPanel />
-        </div>
-      </main>
-    </div>
+        <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 flex flex-col gap-8">
+            <GameStats />
+            <ProjectCard />
+          </div>
+          <div className="lg:col-span-1">
+            <TechPanel />
+          </div>
+        </main>
+      </div>
+      
+      <AlertDialog open={isEventModalOpen} onOpenChange={setIsEventModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{currentEvent?.title}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {currentEvent?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleCloseEventModal}>Ok</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 

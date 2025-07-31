@@ -24,6 +24,18 @@ export interface Project {
   techRequirement: string;
 }
 
+export interface GameEvent {
+  id: string;
+  title: string;
+  description: string;
+  type: "positive" | "negative";
+  effects: {
+    money?: number;
+    xp?: number;
+  };
+  career?: string; // Optional: to link events to specific careers
+}
+
 export const careers: Career[] = [
     {
         id: "frontend",
@@ -79,6 +91,70 @@ const projectTasks = [
   { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql" },
 ];
 
+export const gameEvents: GameEvent[] = [
+    {
+        id: "market_crash",
+        title: "Queda na Bolsa de Tecnologia!",
+        description: "Uma correção no mercado de ações de tecnologia fez com que seus investimentos perdessem valor. Você perde 8% do seu dinheiro.",
+        type: "negative",
+        effects: { money: -0.08 }, // Represents a percentage
+    },
+    {
+        id: "viral_post",
+        title: "Postagem Viral!",
+        description: "Um artigo que você escreveu no seu blog sobre uma nova tecnologia se tornou viral! Você ganhou 50 XP pela sua contribuição à comunidade.",
+        type: "positive",
+        effects: { xp: 50 },
+    },
+    {
+        id: "freelance_opportunity",
+        title: "Oportunidade de Freelance!",
+        description: "Um cliente antigo entrou em contato com um pequeno trabalho urgente. Você ganhou $100 extras.",
+        type: "positive",
+        effects: { money: 100 },
+    },
+    {
+        id: "data_loss",
+        title: "Perda de Dados!",
+        description: "Seu HD falhou! Você perdeu um pouco de progresso em seu projeto atual e algum XP por ter que refazer o trabalho.",
+        type: "negative",
+        effects: { xp: -25 },
+    },
+     {
+        id: "security_bounty",
+        title: "Recompensa por Segurança!",
+        description: "Você encontrou uma falha de segurança crítica em um grande sistema e recebeu uma recompensa. Você ganhou $500.",
+        type: "positive",
+        effects: { money: 500 },
+        career: "whitehat",
+    },
+    {
+        id: "phishing_attempt",
+        title: "Tentativa de Phishing!",
+        description: "Você quase caiu em um golpe de phishing, mas suas habilidades o salvaram. A experiência te rendeu 30 XP.",
+        type: "positive",
+        effects: { xp: 30 },
+        career: "whitehat",
+    },
+     {
+        id: "data_breach_profit",
+        title: "Lucro com Vazamento de Dados!",
+        description: "Você explorou uma vulnerabilidade e vendeu os dados na dark web. Você ganhou $1000, mas sua reputação pode estar em risco.",
+        type: "positive",
+        effects: { money: 1000 },
+        career: "blackhat",
+    },
+    {
+        id: "avoided_feds",
+        title: "Feds na sua cola!",
+        description: "As autoridades quase te pegaram, mas você conseguiu apagar seus rastros a tempo. O estresse te custou 50 XP.",
+        type: "negative",
+        effects: { xp: -50 },
+        career: "blackhat",
+    },
+];
+
+
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export const generateNewProject = (ownedTechs: string[]): Project => {
@@ -99,6 +175,11 @@ export const generateNewProject = (ownedTechs: string[]): Project => {
     techRequirement: taskTemplate.tech
   };
 };
+
+export const generateRandomEvent = (careerId?: string | null): GameEvent => {
+    const careerSpecificEvents = careerId ? gameEvents.filter(e => e.career === careerId || !e.career) : gameEvents.filter(e => !e.career);
+    return getRandomElement(careerSpecificEvents);
+}
 
 export const getTechnologyById = (id: string): Technology | undefined => {
   return technologies.find(t => t.id === id);
