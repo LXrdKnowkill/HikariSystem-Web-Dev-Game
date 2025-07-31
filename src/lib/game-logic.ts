@@ -1,8 +1,17 @@
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon } from "lucide-react";
+
 export interface Technology {
   id: string;
   name: string;
   description: string;
   cost: number;
+}
+
+export interface Career {
+    id: string;
+    name: string;
+    description: string;
+    icon: LucideIcon;
 }
 
 export interface Project {
@@ -14,6 +23,33 @@ export interface Project {
   progress: number;
   techRequirement: string;
 }
+
+export const careers: Career[] = [
+    {
+        id: "frontend",
+        name: "Frontend",
+        description: "Focado na experiência do usuário e na interface visual. Cria sites e aplicações bonitas e interativas.",
+        icon: Code,
+    },
+    {
+        id: "backend",
+        name: "Backend",
+        description: "Trabalha nos bastidores, gerenciando servidores, bancos de dados e a lógica da aplicação.",
+        icon: Terminal,
+    },
+    {
+        id: "whitehat",
+        name: "White Hat",
+        description: "Um hacker ético que protege sistemas encontrando vulnerabilidades antes que sejam exploradas.",
+        icon: ShieldCheck,
+    },
+    {
+        id: "blackhat",
+        name: "Black Hat",
+        description: "Explora sistemas para ganho pessoal, operando nas sombras da internet.",
+        icon: ShieldOff,
+    },
+]
 
 export const technologies: Technology[] = [
   { id: "html", name: "HTML", description: "A espinha dorsal da web.", cost: 0 },

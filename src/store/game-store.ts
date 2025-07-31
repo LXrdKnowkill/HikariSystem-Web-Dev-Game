@@ -3,11 +3,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import {
-  Technology,
   Project,
   generateNewProject,
   getTechnologyById,
-  technologies,
 } from "@/lib/game-logic";
 
 interface GameState {
@@ -16,10 +14,12 @@ interface GameState {
   level: number;
   technologies: Record<string, boolean>;
   currentProject: Project | null;
+  career: string | null;
   actions: {
     tick: (delta: number) => void;
     getNewProject: () => void;
     researchTechnology: (techId: string) => void;
+    setCareer: (careerId: string) => void;
     reset: () => void;
   };
 }
@@ -30,6 +30,7 @@ const initialState = {
   level: 1,
   technologies: { "html": true },
   currentProject: null,
+  career: null,
 };
 
 export const useGameStore = create<GameState>()(
@@ -89,6 +90,9 @@ export const useGameStore = create<GameState>()(
             }));
           }
         },
+        setCareer: (careerId: string) => {
+            set({ career: careerId });
+        },
         reset: () => {
           set(initialState);
         },
@@ -103,6 +107,7 @@ export const useGameStore = create<GameState>()(
         level: state.level,
         technologies: state.technologies,
         currentProject: state.currentProject,
+        career: state.career,
       }),
       merge: (persistedState, currentState) => {
         const state = persistedState as GameState;

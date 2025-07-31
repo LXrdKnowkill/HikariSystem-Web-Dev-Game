@@ -17,7 +17,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleStart = () => {
-    router.push("/dashboard");
+    router.push("/career-selection");
   };
 
   return (
@@ -37,7 +37,7 @@ export default function LoginPage() {
         <CardContent>
           <div className="text-center p-6 bg-muted/50 rounded-lg">
             <p className="font-code text-primary">
-              // Comece sua carreira.
+              // Escolha sua carreira.
               <br />
               // Escreva código.
               <br />
