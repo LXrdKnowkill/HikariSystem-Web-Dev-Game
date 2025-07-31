@@ -39,17 +39,27 @@ export interface Project {
   isHighRisk?: boolean; // For Black Hat projects
 }
 
+export interface GameEventOption {
+    text: string;
+    effects: {
+        money?: number; // Can be a fixed amount or a percentage
+        xp?: number;
+    };
+}
+
 export interface GameEvent {
   id: string;
   title: string;
   description: string;
-  type: "positive" | "negative";
-  effects: {
+  type: "positive" | "negative" | "choice";
+  effects?: {
     money?: number;
     xp?: number;
   };
+  options?: GameEventOption[];
   career?: string; // Optional: to link events to specific careers
 }
+
 
 export interface Rank {
   name: string;
@@ -142,13 +152,13 @@ export const upgrades: Upgrade[] = [
         description: "Aumenta a velocidade com que você completa projetos.",
         icon: Zap,
         levels: [
-            { cost: 250, effect: 0.5 },
-            { cost: 1250, effect: 1.0 },
-            { cost: 5000, effect: 1.5 },
-            { cost: 20000, effect: 2.0 },
-            { cost: 80000, effect: 2.5 },
-            { cost: 250000, effect: 3.0 },
-            { cost: 1000000, effect: 4.0 },
+            { cost: 250, effect: 1 },
+            { cost: 1250, effect: 2 },
+            { cost: 5000, effect: 3.5 },
+            { cost: 20000, effect: 5 },
+            { cost: 80000, effect: 7 },
+            { cost: 250000, effect: 10 },
+            { cost: 1000000, effect: 15 },
         ]
     },
     {
@@ -314,9 +324,12 @@ export const gameEvents: GameEvent[] = [
     {
         id: "market_crash",
         title: "Queda na Bolsa de Tecnologia!",
-        description: "Uma correção no mercado de ações de tecnologia fez com que seus investimentos perdessem valor. Você perde 8% do seu dinheiro.",
-        type: "negative",
-        effects: { money: -0.08 }, // Represents a percentage
+        description: "Uma correção no mercado de ações de tecnologia fez com que seus investimentos perdessem valor. O que você faz?",
+        type: "choice",
+        options: [
+            { text: "Vender tudo! (-10% dinheiro)", effects: { money: -0.10 } },
+            { text: "Manter e torcer... (50/50)", effects: { money: Math.random() < 0.5 ? -0.25 : 0 } }
+        ]
     },
     {
         id: "viral_post",
@@ -466,10 +479,13 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string, up
 };
 
 export const generateRandomEvent = (careerId?: string | null, luckBonus: number = 0): GameEvent => {
-    const isPositive = Math.random() < (0.5 + luckBonus); // Base 50% chance for positive event, modified by luck
+    // Re-roll the 50/50 chance for the market crash event every time it's generated
+    const marketCrashEvent = gameEvents.find(e => e.id === 'market_crash');
+    if (marketCrashEvent && marketCrashEvent.options) {
+        marketCrashEvent.options[1].effects.money = Math.random() < 0.5 ? -0.25 : 0;
+    }
     
-    let potentialEvents = gameEvents.filter(e => e.type === (isPositive ? 'positive' : 'negative'));
-
+    let potentialEvents = gameEvents;
     // Filter out blackhat trace event, it's special
     potentialEvents = potentialEvents.filter(e => e.id !== 'traced');
 
@@ -478,7 +494,7 @@ export const generateRandomEvent = (careerId?: string | null, luckBonus: number 
     if (careerSpecificEvents.length > 0) {
         return getRandomElement(careerSpecificEvents);
     }
-    // Fallback to any event of the chosen type if no career-specific one is found
+    // Fallback to any event if no career-specific one is found
     return getRandomElement(potentialEvents);
 }
 

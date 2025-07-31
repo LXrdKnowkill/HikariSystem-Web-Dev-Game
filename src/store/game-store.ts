@@ -7,6 +7,7 @@ import {
   generateNewProject,
   getTechnologyById,
   GameEvent,
+  GameEventOption,
   generateRandomEvent,
   getRank,
   ranks,
@@ -38,7 +39,7 @@ interface GameState {
     researchTechnology: (techId: string) => void;
     purchaseUpgrade: (upgradeId: string) => void;
     setCareer: (careerId: string) => void;
-    applyEvent: (event: GameEvent) => void;
+    applyEvent: (effects: GameEventOption['effects'] | undefined) => void;
     clearEvent: () => void;
     reset: () => void;
   };
@@ -232,21 +233,23 @@ export const useGameStore = create<GameState>()(
               }));
           }
         },
-        applyEvent: (event) => {
+        applyEvent: (effects) => {
+            if (!effects) return;
+            
             set(state => {
                 let newMoney = state.money;
                 let newXp = state.xp;
 
-                if(event.effects.money) {
+                if(effects.money !== undefined) {
                     // Check if it's a percentage (between -1 and 1, but not 0)
-                    if(event.effects.money > -1 && event.effects.money < 1 && event.effects.money !== 0) {
-                         newMoney += state.money * event.effects.money;
+                    if(effects.money > -1 && effects.money < 1 && effects.money !== 0) {
+                         newMoney += state.money * effects.money;
                     } else {
-                        newMoney += event.effects.money;
+                        newMoney += effects.money;
                     }
                 }
-                if(event.effects.xp) {
-                    newXp += event.effects.xp;
+                if(effects.xp) {
+                    newXp += effects.xp;
                 }
 
                 const newRank = getRank(newXp);

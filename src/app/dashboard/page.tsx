@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { careers } from "@/lib/game-logic";
+import { careers, GameEventOption } from "@/lib/game-logic";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
@@ -46,9 +46,9 @@ export default function DashboardPage() {
     }
   }, [currentEvent]);
 
-  const handleCloseEventModal = () => {
+  const handleEventChoice = (option?: GameEventOption) => {
       if(currentEvent) {
-        applyEvent(currentEvent);
+        applyEvent(currentEvent.effects || option?.effects);
         clearEvent();
         setIsEventModalOpen(false);
       }
@@ -111,7 +111,15 @@ export default function DashboardPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={handleCloseEventModal}>Ok</AlertDialogAction>
+             {currentEvent?.options ? (
+              currentEvent.options.map((option, index) => (
+                <AlertDialogAction key={index} onClick={() => handleEventChoice(option)}>
+                  {option.text}
+                </AlertDialogAction>
+              ))
+            ) : (
+              <AlertDialogAction onClick={() => handleEventChoice()}>Ok</AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
