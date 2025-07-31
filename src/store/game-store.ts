@@ -12,7 +12,8 @@ import {
   ranks,
   Upgrade,
   getUpgradeById,
-  getEventById
+  getEventById,
+  technologies
 } from "@/lib/game-logic";
 
 // Constants
@@ -43,12 +44,28 @@ interface GameState {
   };
 }
 
+const getInitialTechnologies = (careerId: string | null): Record<string, boolean> => {
+    const initialTechs: Record<string, boolean> = {};
+    const startingTech = technologies.find(t => {
+      if (!t.career) return false;
+      if (Array.isArray(t.career)) {
+        return t.career.includes(careerId!) && t.cost === 0;
+      }
+      return t.career === careerId && t.cost === 0;
+    });
+
+    if (startingTech) {
+        initialTechs[startingTech.id] = true;
+    }
+    return initialTechs;
+}
+
 const initialState = {
   money: 0,
   xp: 0,
   level: 1,
   rank: ranks[0].name,
-  technologies: { "html": true },
+  technologies: {},
   upgrades: {},
   currentProject: null,
   career: null,
@@ -60,6 +77,7 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       ...initialState,
+      technologies: getInitialTechnologies(get().career),
       actions: {
         tick: (delta) => {
           const now = Date.now();
@@ -214,10 +232,21 @@ export const useGameStore = create<GameState>()(
             set({ currentEvent: null });
         },
         setCareer: (careerId: string) => {
-            set({ career: careerId });
+            set({
+              ...initialState, // Reset game progress
+              career: careerId,
+              technologies: getInitialTechnologies(careerId),
+            });
         },
         reset: () => {
-          set(initialState);
+          set(state => ({
+            ...initialState,
+             // keep the selected career but reset everything else
+            career: state.career,
+            technologies: getInitialTechnologies(state.career)
+          }));
+          // a full reset would be set(initialState) and then pushing to career selection
+          // for now, we just reset the progress for the current career
         },
       },
     }),

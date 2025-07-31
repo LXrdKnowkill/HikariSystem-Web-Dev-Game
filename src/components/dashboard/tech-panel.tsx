@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function TechPanel() {
-  const { money, technologies: ownedTechs, rank } = useGameStore();
+  const { money, technologies: ownedTechs, rank, career } = useGameStore();
   const { researchTechnology } = useGameActions();
   const { toast } = useToast();
 
@@ -37,6 +37,14 @@ export default function TechPanel() {
   };
   
   const currentRankIndex = ranks.findIndex(r => r.name === rank);
+  
+  const availableTechs = allTechs.filter(tech => {
+    if (!tech.career) return true; // Techs available for all careers
+    if (Array.isArray(tech.career)) {
+      return tech.career.includes(career!);
+    }
+    return tech.career === career;
+  });
 
   return (
     <Card className="shadow-lg h-full border-0 rounded-t-none">
@@ -49,7 +57,7 @@ export default function TechPanel() {
         <TooltipProvider>
           <ScrollArea className="h-[calc(100vh-280px)]">
             <div className="flex flex-col gap-2 pr-4">
-              {allTechs.map((tech, index) => {
+              {availableTechs.map((tech, index) => {
                 const requiredRankIndex = tech.requiredRank ? ranks.findIndex(r => r.name === tech.requiredRank) : -1;
                 const isLocked = requiredRankIndex > currentRankIndex;
 
@@ -91,7 +99,7 @@ export default function TechPanel() {
                         </Tooltip>
                       )}
                     </div>
-                    {index < allTechs.length - 1 && <Separator />}
+                    {index < availableTechs.length - 1 && <Separator />}
                   </div>
                 )
               })}

@@ -6,6 +6,7 @@ export interface Technology {
   description: string;
   cost: number;
   requiredRank?: string;
+  career?: string | string[]; // Can be for one or multiple careers
 }
 
 export interface Upgrade {
@@ -96,19 +97,32 @@ export const careers: Career[] = [
 ]
 
 export const technologies: Technology[] = [
-  { id: "html", name: "HTML", description: "A espinha dorsal da web.", cost: 0 },
-  { id: "css", name: "CSS", description: "Para deixar as coisas bonitas.", cost: 50 },
-  { id: "javascript", name: "JavaScript", description: "Adicione interatividade aos sites.", cost: 200 },
-  { id: "react", name: "React", description: "Uma poderosa biblioteca baseada em componentes.", cost: 1000, requiredRank: "Desenvolvedor Júnior" },
-  { id: "tailwind", name: "Tailwind CSS", description: "Um framework CSS utility-first.", cost: 800, requiredRank: "Desenvolvedor Júnior" },
-  { id: "typescript", name: "TypeScript", description: "JavaScript com tipagem estática.", cost: 1500, requiredRank: "Desenvolvedor Pleno" },
-  { id: "nextjs", name: "Next.js", description: "O framework React para produção.", cost: 2500, requiredRank: "Desenvolvedor Pleno" },
-  { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 2000, requiredRank: "Desenvolvedor Pleno" },
-  { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000, requiredRank: "Desenvolvedor Sênior" },
-  { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior" },
-  { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software" },
-  { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico" },
+  // --- Frontend Path ---
+  { id: "html", name: "HTML", description: "A espinha dorsal da web.", cost: 0, career: "frontend" },
+  { id: "css", name: "CSS", description: "Para deixar as coisas bonitas.", cost: 50, career: "frontend" },
+  { id: "javascript_fe", name: "JavaScript (Frontend)", description: "Adicione interatividade aos sites.", cost: 200, career: "frontend" },
+  { id: "react", name: "React", description: "Uma poderosa biblioteca baseada em componentes.", cost: 1000, requiredRank: "Desenvolvedor Júnior", career: "frontend" },
+  { id: "tailwind", name: "Tailwind CSS", description: "Um framework CSS utility-first.", cost: 800, requiredRank: "Desenvolvedor Júnior", career: "frontend" },
+  { id: "typescript_fe", name: "TypeScript (Frontend)", description: "JavaScript com tipagem estática para interfaces.", cost: 1500, requiredRank: "Desenvolvedor Pleno", career: "frontend" },
+  { id: "nextjs_fe", name: "Next.js", description: "O framework React para produção.", cost: 2500, requiredRank: "Desenvolvedor Pleno", career: "frontend" },
+
+  // --- Backend Path ---
+  { id: "javascript_be", name: "JavaScript (Backend)", description: "Use JS para a lógica do servidor.", cost: 150, career: "backend" },
+  { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 500, requiredRank: "Desenvolvedor Júnior", career: "backend" },
+  { id: "typescript_be", name: "TypeScript (Backend)", description: "Tipagem estática para APIs robustas.", cost: 1500, requiredRank: "Desenvolvedor Pleno", career: "backend" },
+  { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000, requiredRank: "Desenvolvedor Sênior", career: "backend" },
+  
+  // --- Security Path (Shared by White/Black Hat) ---
+  { id: "networking", name: "Conceitos de Rede", description: "Entenda como os dados trafegam na web.", cost: 200, career: ["whitehat", "blackhat"]},
+  { id: "linux", name: "Linux", description: "O sistema operacional preferido para servidores e segurança.", cost: 600, requiredRank: "Desenvolvedor Júnior", career: ["whitehat", "blackhat"]},
+  { id: "scripting", name: "Scripting (Python/Bash)", description: "Automatize tarefas de segurança e exploits.", cost: 1800, requiredRank: "Desenvolvedor Pleno", career: ["whitehat", "blackhat"]},
+  
+  // --- Advanced Shared Techs ---
+  { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior", career: ["frontend", "backend", "whitehat", "blackhat"] },
+  { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software", career: ["backend", "whitehat", "blackhat"] },
+  { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico", career: "frontend" },
 ];
+
 
 export const upgrades: Upgrade[] = [
     {
@@ -192,11 +206,11 @@ const companyNameParts3 = ["LTDA", "S.A.", "Group", "Co."];
 const projectTasks = [
   { task: "Construir uma landing page", baseEffort: 10, baseReward: 20, baseXp: 5, tech: "html" },
   { task: "Estilizar um site corporativo", baseEffort: 20, baseReward: 40, baseXp: 10, tech: "css" },
-  { task: "Criar uma galeria interativa", baseEffort: 40, baseReward: 100, baseXp: 25, tech: "javascript" },
+  { task: "Criar uma galeria interativa", baseEffort: 40, baseReward: 100, baseXp: 25, tech: "javascript_fe" },
   { task: "Desenvolver uma aplicação de página única (SPA)", baseEffort: 100, baseReward: 500, baseXp: 150, tech: "react", requiredRank: "Desenvolvedor Júnior" },
   { task: "Refatorar CSS com um framework utility", baseEffort: 80, baseReward: 400, baseXp: 120, tech: "tailwind", requiredRank: "Desenvolvedor Júnior" },
-  { task: "Migrar uma codebase JS para ser type-safe", baseEffort: 150, baseReward: 800, baseXp: 200, tech: "typescript", requiredRank: "Desenvolvedor Pleno" },
-  { task: "Construir uma aplicação full-stack", baseEffort: 250, baseReward: 1500, baseXp: 400, tech: "nextjs", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Migrar uma codebase JS para ser type-safe", baseEffort: 150, baseReward: 800, baseXp: 200, tech: "typescript_fe", requiredRank: "Desenvolvedor Pleno" },
+  { task: "Construir uma aplicação full-stack", baseEffort: 250, baseReward: 1500, baseXp: 400, tech: "nextjs_fe", requiredRank: "Desenvolvedor Pleno" },
   { task: "Desenvolver uma API REST", baseEffort: 200, baseReward: 1200, baseXp: 300, tech: "nodejs", requiredRank: "Desenvolvedor Pleno" },
   { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql", requiredRank: "Desenvolvedor Sênior" },
   { task: "Otimizar a performance de renderização de um app React", baseEffort: 400, baseReward: 2500, baseXp: 600, tech: "react", requiredRank: "Desenvolvedor Sênior" },
@@ -205,11 +219,11 @@ const projectTasks = [
   { task: "Criar um cluster Kubernetes para um microserviço", baseEffort: 1500, baseReward: 15000, baseXp: 3000, tech: "kubernetes", requiredRank: "Arquiteto de Software" },
   { task: "Gerenciar uma migração de API legada para GraphQL", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "graphql", requiredRank: "Líder Técnico" },
   { task: "Desenvolver um módulo de física para um jogo de navegador", baseEffort: 2000, baseReward: 25000, baseXp: 5000, tech: "webassembly", requiredRank: "Líder Técnico" },
-  // White Hat Projects
-  { task: "Encontrar falhas em um sistema bancário (Bug Bounty)", baseEffort: 600, baseReward: 5000, baseXp: 1000, tech: "nodejs", requiredRank: "Desenvolvedor Sênior", career: "whitehat" },
-  { task: "Realizar teste de penetração em uma rede corporativa", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "docker", requiredRank: "Arquiteto de Software", career: "whitehat" },
-  // Black Hat Projects
-  { task: "Invadir um sistema de e-commerce e desviar fundos", baseEffort: 700, baseReward: 10000, baseXp: 500, tech: "nodejs", requiredRank: "Desenvolvedor Sênior", career: "blackhat", isHighRisk: true },
+  
+  // Security Projects
+  { task: "Encontrar falhas em um sistema bancário (Bug Bounty)", baseEffort: 600, baseReward: 5000, baseXp: 1000, tech: "scripting", requiredRank: "Desenvolvedor Sênior", career: "whitehat" },
+  { task: "Realizar teste de penetração em uma rede corporativa", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "linux", requiredRank: "Arquiteto de Software", career: "whitehat" },
+  { task: "Invadir um sistema de e-commerce e desviar fundos", baseEffort: 700, baseReward: 10000, baseXp: 500, tech: "scripting", requiredRank: "Desenvolvedor Sênior", career: "blackhat", isHighRisk: true },
   { task: "Criar uma botnet para minerar criptomoedas", baseEffort: 1500, baseReward: 25000, baseXp: 1000, tech: "docker", requiredRank: "Arquiteto de Software", career: "blackhat", isHighRisk: true },
 ];
 
@@ -349,15 +363,18 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string, up
       }
   }
   
+  // Find a default task if no specific one is available.
+  const defaultTask = projectTasks.find(t => t.tech === "html") || projectTasks[0];
+
   return {
     company,
-    task: taskTemplate.task,
-    effort: effort,
-    reward: taskTemplate.baseReward * (1 + levelMultiplier * 0.3),
-    xp: taskTemplate.baseXp * (1 + levelMultiplier * 0.25),
+    task: taskTemplate?.task || defaultTask.task,
+    effort: taskTemplate?.baseEffort ? taskTemplate.baseEffort * (1 + levelMultiplier * 0.2) : defaultTask.baseEffort,
+    reward: taskTemplate?.baseReward ? taskTemplate.baseReward * (1 + levelMultiplier * 0.3) : defaultTask.baseReward,
+    xp: taskTemplate?.baseXp ? taskTemplate.baseXp * (1 + levelMultiplier * 0.25) : defaultTask.baseXp,
     progress: 0,
-    techRequirement: taskTemplate.tech,
-    isHighRisk: taskTemplate.isHighRisk
+    techRequirement: taskTemplate?.tech || defaultTask.tech,
+    isHighRisk: taskTemplate?.isHighRisk || false
   };
 };
 
