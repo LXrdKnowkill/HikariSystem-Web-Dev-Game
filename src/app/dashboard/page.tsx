@@ -7,6 +7,7 @@ import GameStats from "@/components/dashboard/game-stats";
 import ProjectCard from "@/components/dashboard/project-card";
 import TechPanel from "@/components/dashboard/tech-panel";
 import UpgradesPanel from "@/components/dashboard/upgrades-panel";
+import StatsChart from "@/components/dashboard/stats-chart";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
@@ -94,6 +95,7 @@ export default function DashboardPage() {
         <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-8">
             <GameStats />
+            <StatsChart />
             <ProjectCard />
           </div>
           <div className="lg:col-span-1">
@@ -153,6 +155,7 @@ function DashboardSkeleton() {
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-8">
           <Skeleton className="h-24 w-full rounded-lg" />
+          <Skeleton className="h-48 w-full rounded-lg" />
           <Skeleton className="h-64 w-full rounded-lg" />
         </div>
         <div className="lg:col-span-1">
