@@ -5,6 +5,7 @@ export interface Technology {
   name: string;
   description: string;
   cost: number;
+  requiredRank?: string;
 }
 
 export interface Career {
@@ -91,6 +92,9 @@ export const technologies: Technology[] = [
   { id: "nextjs", name: "Next.js", description: "O framework React para produção.", cost: 2500 },
   { id: "nodejs", name: "Node.js", description: "Execute JavaScript no servidor.", cost: 2000 },
   { id: "graphql", name: "GraphQL", description: "Uma forma moderna de construir APIs.", cost: 3000 },
+  { id: "docker", name: "Docker", description: "Containerize suas aplicações para facilitar o deploy.", cost: 5000, requiredRank: "Desenvolvedor Sênior" },
+  { id: "kubernetes", name: "Kubernetes", description: "Orquestre containers em escala.", cost: 15000, requiredRank: "Arquiteto de Software" },
+  { id: "webassembly", name: "WebAssembly", description: "Execute código de alta performance no navegador.", cost: 20000, requiredRank: "Líder Técnico" },
 ];
 
 const companyNameParts1 = ["Blue", "Red", "Green", "Quantum", "Hyper", "Stellar", "Lunar", "Solar"];
@@ -108,8 +112,11 @@ const projectTasks = [
   { task: "Desenvolver uma API REST", baseEffort: 200, baseReward: 1200, baseXp: 300, tech: "nodejs", requiredRank: "Desenvolvedor Pleno" },
   { task: "Implementar um servidor GraphQL", baseEffort: 300, baseReward: 2000, baseXp: 500, tech: "graphql", requiredRank: "Desenvolvedor Sênior" },
   { task: "Otimizar a performance de renderização de um app React", baseEffort: 400, baseReward: 2500, baseXp: 600, tech: "react", requiredRank: "Desenvolvedor Sênior" },
+  { task: "Conteinerizar uma aplicação legada para deploy", baseEffort: 500, baseReward: 4000, baseXp: 800, tech: "docker", requiredRank: "Desenvolvedor Sênior" },
   { task: "Liderar a arquitetura de um sistema distribuído", baseEffort: 1000, baseReward: 10000, baseXp: 2000, tech: "nodejs", requiredRank: "Arquiteto de Software" },
+  { task: "Criar um cluster Kubernetes para um microserviço", baseEffort: 1500, baseReward: 15000, baseXp: 3000, tech: "kubernetes", requiredRank: "Arquiteto de Software" },
   { task: "Gerenciar uma migração de API legada para GraphQL", baseEffort: 1200, baseReward: 12000, baseXp: 2500, tech: "graphql", requiredRank: "Líder Técnico" },
+  { task: "Desenvolver um módulo de física para um jogo de navegador", baseEffort: 2000, baseReward: 25000, baseXp: 5000, tech: "webassembly", requiredRank: "Líder Técnico" },
 ];
 
 export const gameEvents: GameEvent[] = [
