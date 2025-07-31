@@ -95,7 +95,7 @@ export default function UpgradesPanel() {
                                       onClick={() => handlePurchase(upgrade.id)}
                                       disabled={money < nextLevelStats!.cost}
                                     >
-                                      ${nextLevelStats!.cost}
+                                      ${nextLevelStats!.cost.toLocaleString('pt-BR')}
                                       <ChevronRight className="h-4 w-4 ml-1" />
                                     </Button>
                                 </div>

@@ -109,8 +109,23 @@ export const useGameStore = create<GameState>()(
               if (newProgress >= state.currentProject.effort) {
                 // Project Completion
                 let finalReward = state.currentProject.reward;
+                let finalXP = state.currentProject.xp;
                 
-                // --- UPGRADE BONUSES ---
+                // --- GLOBAL UPGRADE BONUSES ---
+                const negotiatorLevel = state.upgrades['expertNegotiator'] || 0;
+                if (negotiatorLevel > 0) {
+                    const negotiatorUpgrade = getUpgradeById('expertNegotiator');
+                    finalReward *= (1 + negotiatorUpgrade!.levels[negotiatorLevel - 1].effect);
+                }
+
+                const learningLevel = state.upgrades['acceleratedLearning'] || 0;
+                if(learningLevel > 0) {
+                    const learningUpgrade = getUpgradeById('acceleratedLearning');
+                    finalXP *= (1 + learningUpgrade!.levels[learningLevel - 1].effect);
+                }
+
+
+                // --- CAREER UPGRADE BONUSES ---
                 // Frontend Bonus
                 const designMasterLevel = state.upgrades['designMaster'] || 0;
                 if(designMasterLevel > 0) {
@@ -127,7 +142,7 @@ export const useGameStore = create<GameState>()(
                     finalReward *= (1 + analysisToolsUpgrade!.levels[analysisToolsLevel-1].effect);
                 }
 
-                const newXP = state.xp + state.currentProject.xp;
+                const newXP = state.xp + finalXP;
                 const newLevel = Math.floor(Math.pow(newXP / 100, 0.7)) + 1;
                 const newRank = getRank(newXP);
 

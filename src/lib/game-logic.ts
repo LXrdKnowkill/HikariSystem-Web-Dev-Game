@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -142,11 +142,39 @@ export const upgrades: Upgrade[] = [
         description: "Aumenta a velocidade com que você completa projetos.",
         icon: Zap,
         levels: [
-            { cost: 100, effect: 0.1 },
-            { cost: 500, effect: 0.2 },
-            { cost: 2000, effect: 0.3 },
-            { cost: 10000, effect: 0.4 },
-            { cost: 50000, effect: 0.5 },
+            { cost: 250, effect: 0.25 },
+            { cost: 1250, effect: 0.50 },
+            { cost: 5000, effect: 0.75 },
+            { cost: 20000, effect: 1.0 },
+            { cost: 80000, effect: 1.25 },
+            { cost: 250000, effect: 1.5 },
+            { cost: 1000000, effect: 2.0 },
+        ]
+    },
+    {
+        id: "acceleratedLearning",
+        name: "Aprendizagem Acelerada",
+        description: "Aumenta permanentemente todo o XP ganho.",
+        icon: Brain,
+        levels: [
+            { cost: 1000, effect: 0.1 },
+            { cost: 5000, effect: 0.2 },
+            { cost: 20000, effect: 0.3 },
+            { cost: 100000, effect: 0.4 },
+            { cost: 500000, effect: 0.5 },
+        ]
+    },
+    {
+        id: "expertNegotiator",
+        name: "Negociador Experiente",
+        description: "Aumenta o dinheiro ganho em todos os projetos.",
+        icon: Wallet,
+        levels: [
+            { cost: 1000, effect: 0.05 },
+            { cost: 5000, effect: 0.10 },
+            { cost: 20000, effect: 0.15 },
+            { cost: 100000, effect: 0.20 },
+            { cost: 500000, effect: 0.25 },
         ]
     },
     {
@@ -158,6 +186,8 @@ export const upgrades: Upgrade[] = [
             { cost: 500, effect: 0.05 },
             { cost: 2500, effect: 0.10 },
             { cost: 10000, effect: 0.15 },
+            { cost: 50000, effect: 0.20 },
+            { cost: 200000, effect: 0.25 },
         ]
     },
     {
