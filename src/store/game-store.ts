@@ -7,7 +7,9 @@ import {
   generateNewProject,
   getTechnologyById,
   GameEvent,
-  generateRandomEvent
+  generateRandomEvent,
+  getRank,
+  ranks
 } from "@/lib/game-logic";
 
 // Constants
@@ -18,6 +20,7 @@ interface GameState {
   money: number;
   xp: number;
   level: number;
+  rank: string;
   technologies: Record<string, boolean>;
   currentProject: Project | null;
   career: string | null;
@@ -38,6 +41,7 @@ const initialState = {
   money: 0,
   xp: 0,
   level: 1,
+  rank: ranks[0].name,
   technologies: { "html": true },
   currentProject: null,
   career: null,
@@ -71,12 +75,15 @@ export const useGameStore = create<GameState>()(
               );
 
               if (newProgress >= state.currentProject.effort) {
-                const newXP = state.xp + state.currentProject.xp;
+                const newXP = state.xp + state.currentProject.reward;
                 const newLevel = Math.floor(Math.pow(newXP / 100, 0.7)) + 1;
+                const newRank = getRank(newXP);
+
                 return {
                   money: state.money + state.currentProject.reward,
                   xp: newXP,
                   level: newLevel,
+                  rank: newRank,
                   currentProject: null,
                 };
               }
@@ -127,7 +134,13 @@ export const useGameStore = create<GameState>()(
                     newXp += event.effects.xp;
                 }
 
-                return { money: Math.max(0, newMoney), xp: Math.max(0, newXp) }
+                const newRank = getRank(newXp);
+
+                return { 
+                  money: Math.max(0, newMoney), 
+                  xp: Math.max(0, newXp),
+                  rank: newRank,
+                }
             });
         },
         clearEvent: () => {
@@ -148,6 +161,7 @@ export const useGameStore = create<GameState>()(
         money: state.money,
         xp: state.xp,
         level: state.level,
+        rank: state.rank,
         technologies: state.technologies,
         currentProject: state.currentProject,
         career: state.career,

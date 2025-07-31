@@ -36,6 +36,24 @@ export interface GameEvent {
   career?: string; // Optional: to link events to specific careers
 }
 
+export interface Rank {
+  name: string;
+  xpRequired: number;
+}
+
+export const ranks: Rank[] = [
+    { name: "Iniciante", xpRequired: 0 },
+    { name: "Desenvolvedor Júnior", xpRequired: 500 },
+    { name: "Desenvolvedor Pleno", xpRequired: 2500 },
+    { name: "Desenvolvedor Sênior", xpRequired: 10000 },
+    { name: "Arquiteto de Software", xpRequired: 30000 },
+    { name: "Líder Técnico", xpRequired: 75000 },
+    { name: "Gerente de Engenharia", xpRequired: 150000 },
+    { name: "CTO", xpRequired: 500000 },
+    { name: "Lenda do Código", xpRequired: 1000000 },
+];
+
+
 export const careers: Career[] = [
     {
         id: "frontend",
@@ -216,3 +234,7 @@ export const generateRandomEvent = (careerId?: string | null): GameEvent => {
 export const getTechnologyById = (id: string): Technology | undefined => {
   return technologies.find(t => t.id === id);
 };
+
+export const getRank = (xp: number): string => {
+    return ranks.slice().reverse().find(r => xp >= r.xpRequired)?.name || ranks[0].name;
+}
