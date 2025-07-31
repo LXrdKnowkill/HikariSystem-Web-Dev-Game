@@ -22,13 +22,7 @@ const BASE_EVENT_CHANCE = 0.05; // 5% chance per tick
 const EVENT_COOLDOWN = 60 * 1000; // 60 seconds
 const BASE_RISK_CHANCE = 0.4; // 40% chance of getting caught for black hat projects
 const PRESTIGE_XP_BONUS_PER_LEVEL = 0.10; // 10% bonus XP per prestige level
-const HISTORY_INTERVAL = 5; // Record history every 5 seconds (5 ticks)
-const MAX_HISTORY_LENGTH = 50; // Keep the last 50 data points
 
-interface HistoryData {
-  time: number;
-  value: number;
-}
 interface GameState {
   money: number;
   xp: number;
@@ -41,9 +35,6 @@ interface GameState {
   career: string | null;
   currentEvent: GameEvent | null;
   lastEventTimestamp: number;
-  moneyHistory: HistoryData[];
-  xpHistory: HistoryData[];
-  historyTickCounter: number;
   actions: {
     tick: (delta: number) => void;
     getNewProject: () => void;
@@ -88,9 +79,6 @@ const initialState = {
   career: null,
   currentEvent: null,
   lastEventTimestamp: 0,
-  moneyHistory: [],
-  xpHistory: [],
-  historyTickCounter: 0,
 };
 
 export const useGameStore = create<GameState>()(
@@ -100,7 +88,7 @@ export const useGameStore = create<GameState>()(
       actions: {
         tick: (delta) => {
           const now = Date.now();
-          const { currentProject, technologies, lastEventTimestamp, career, upgrades, currentEvent, historyTickCounter } = get();
+          const { currentProject, technologies, lastEventTimestamp, career, upgrades, currentEvent } = get();
           
           // Project progress logic
           if (currentProject) {
@@ -218,22 +206,6 @@ export const useGameStore = create<GameState>()(
               const newEvent = generateRandomEvent(career, luckBonus);
               set({ currentEvent: newEvent, lastEventTimestamp: now });
           }
-          
-           // History tracking logic
-           const newHistoryTickCounter = historyTickCounter + 1;
-           if (newHistoryTickCounter >= HISTORY_INTERVAL) {
-               set(state => {
-                   const newMoneyHistory = [...state.moneyHistory, { time: now, value: state.money }].slice(-MAX_HISTORY_LENGTH);
-                   const newXpHistory = [...state.xpHistory, { time: now, value: state.xp }].slice(-MAX_HISTORY_LENGTH);
-                   return {
-                       moneyHistory: newMoneyHistory,
-                       xpHistory: newXpHistory,
-                       historyTickCounter: 0,
-                   };
-               });
-           } else {
-               set({ historyTickCounter: newHistoryTickCounter });
-           }
         },
         getNewProject: () => {
           if (get().currentProject) return;
@@ -347,8 +319,6 @@ export const useGameStore = create<GameState>()(
         currentProject: state.currentProject,
         career: state.career,
         lastEventTimestamp: state.lastEventTimestamp,
-        moneyHistory: state.moneyHistory,
-        xpHistory: state.xpHistory,
       }),
       merge: (persistedState, currentState) => {
         const state = { ...initialState, ...(persistedState as Partial<GameState>) };
