@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -145,6 +145,18 @@ export const upgrades: Upgrade[] = [
             { cost: 8000, effect: 0.2 }, // 20% bonus
             { cost: 25000, effect: 0.3 }, // 30% bonus
         ]
+    },
+    {
+        id: "optimizationMaster",
+        name: "Mestre da Otimização",
+        description: "Reduz o esforço necessário para completar projetos de Node.js e GraphQL.",
+        icon: Gauge,
+        career: "backend",
+        levels: [
+            { cost: 2000, effect: 0.1 }, // 10% effort reduction
+            { cost: 8000, effect: 0.2 }, // 20% effort reduction
+            { cost: 25000, effect: 0.3 }, // 30% effort reduction
+        ]
     }
 ];
 
@@ -268,7 +280,7 @@ export const gameEvents: GameEvent[] = [
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-export const generateNewProject = (ownedTechs: string[], currentRank: string): Project => {
+export const generateNewProject = (ownedTechs: string[], currentRank: string, upgrades: Record<string, number>): Project => {
   const currentRankIndex = ranks.findIndex(r => r.name === currentRank);
 
   const availableTasksByTech = projectTasks.filter(p => ownedTechs.includes(p.tech));
@@ -284,11 +296,21 @@ export const generateNewProject = (ownedTechs: string[], currentRank: string): P
   const levelMultiplier = ownedTechs.length + currentRankIndex;
   
   const company = `${getRandomElement(companyNameParts1)} ${getRandomElement(companyNameParts2)} ${getRandomElement(companyNameParts3)}`;
+
+  let effort = taskTemplate.baseEffort * (1 + levelMultiplier * 0.2);
+  const optimizationLevel = upgrades['optimizationMaster'] || 0;
+  if(optimizationLevel > 0) {
+      const optimizationUpgrade = getUpgradeById('optimizationMaster');
+      const projectTech = taskTemplate.tech;
+      if(optimizationUpgrade && (projectTech === 'nodejs' || projectTech === 'graphql')) {
+          effort *= (1 - optimizationUpgrade.levels[optimizationLevel - 1].effect);
+      }
+  }
   
   return {
     company,
     task: taskTemplate.task,
-    effort: taskTemplate.baseEffort * (1 + levelMultiplier * 0.2),
+    effort: effort,
     reward: taskTemplate.baseReward * (1 + levelMultiplier * 0.3),
     xp: taskTemplate.baseXp * (1 + levelMultiplier * 0.25),
     progress: 0,

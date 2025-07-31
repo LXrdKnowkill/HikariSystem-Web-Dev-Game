@@ -127,9 +127,9 @@ export const useGameStore = create<GameState>()(
         },
         getNewProject: () => {
           if (get().currentProject) return;
-          const { technologies, rank } = get();
+          const { technologies, rank, upgrades } = get();
           const ownedTechs = Object.keys(technologies).filter(id => technologies[id]);
-          const newProject = generateNewProject(ownedTechs, rank);
+          const newProject = generateNewProject(ownedTechs, rank, upgrades);
           set({ currentProject: newProject });
         },
         researchTechnology: (techId: string) => {
