@@ -85,7 +85,7 @@ export default function DashboardPage() {
             )}
             <Button variant="outline" size="sm" onClick={() => {
               reset();
-              router.push('/');
+              router.push('/career-selection');
             }}>
                Reiniciar Jogo
             </Button>
