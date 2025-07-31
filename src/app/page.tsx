@@ -21,7 +21,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen p-4 bg-background">
+    <main className="flex items-center justify-center min-h-screen p-4 bg-background animate-in fade-in duration-500">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">

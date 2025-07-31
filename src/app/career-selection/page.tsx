@@ -16,7 +16,7 @@ export default function CareerSelectionPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen p-4 bg-background">
+    <main className="flex items-center justify-center min-h-screen p-4 bg-background animate-in fade-in duration-500">
       <Card className="w-full max-w-2xl shadow-2xl">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-headline">Escolha sua Carreira</CardTitle>

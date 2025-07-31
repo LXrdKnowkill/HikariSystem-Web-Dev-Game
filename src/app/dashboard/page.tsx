@@ -67,7 +67,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
+      <div className="min-h-screen bg-background text-foreground p-4 md:p-8 animate-in fade-in duration-500">
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
             {currentCareer && <currentCareer.icon className="h-8 w-8 text-primary" />}
