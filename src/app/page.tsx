@@ -28,22 +28,22 @@ export default function LoginPage() {
             <Icons.logo className="h-12 w-12 text-primary" />
           </div>
           <CardTitle className="text-3xl font-headline">
-            Welcome to Web Dev Idle
+            Bem-vindo ao Dev Web Ocioso
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Your journey from script-kiddie to code-ninja begins now.
+            Sua jornada de iniciante a mestre do código começa agora.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center p-6 bg-muted/50 rounded-lg">
             <p className="font-code text-primary">
-              // Start your career.
+              // Comece sua carreira.
               <br />
-              // Write code.
+              // Escreva código.
               <br />
-              // Earn cash.
+              // Ganhe dinheiro.
               <br />
-              // Repeat.
+              // Repita.
             </p>
           </div>
         </CardContent>
@@ -54,7 +54,7 @@ export default function LoginPage() {
             onClick={handleStart}
           >
             <Code className="mr-2 h-5 w-5" />
-            Start Coding
+            Começar a Programar
           </Button>
         </CardFooter>
       </Card>

@@ -26,11 +26,11 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3">
           <Icons.logo className="h-8 w-8 text-primary" />
           <h1 className="text-2xl md:text-3xl font-headline font-bold">
-            Web Dev Idle
+            Dev Web Ocioso
           </h1>
         </div>
         <Button variant="outline" size="sm" onClick={reset}>
-           Reset Game
+           Reiniciar Jogo
         </Button>
       </header>
 

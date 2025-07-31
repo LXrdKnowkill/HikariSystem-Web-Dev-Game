@@ -18,14 +18,14 @@ export default function TechPanel() {
     if (money >= cost) {
       researchTechnology(techId);
        toast({
-        title: "Research Complete!",
-        description: `You've learned ${allTechs.find(t => t.id === techId)?.name}.`,
+        title: "Pesquisa Concluída!",
+        description: `Você aprendeu ${allTechs.find(t => t.id === techId)?.name}.`,
       });
     } else {
       toast({
         variant: "destructive",
-        title: "Insufficient Funds",
-        description: "You need more money to research this technology.",
+        title: "Fundos Insuficientes",
+        description: "Você precisa de mais dinheiro para pesquisar esta tecnologia.",
       });
     }
   };
@@ -35,7 +35,7 @@ export default function TechPanel() {
       <CardHeader>
         <div className="flex items-center gap-3">
             <FlaskConical className="h-6 w-6 text-primary" />
-            <CardTitle className="font-headline">Technologies</CardTitle>
+            <CardTitle className="font-headline">Tecnologias</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
@@ -51,7 +51,7 @@ export default function TechPanel() {
                   {ownedTechs[tech.id] ? (
                     <div className="flex items-center gap-2 text-green-400">
                       <CheckCircle className="h-5 w-5" />
-                      <span className="text-sm font-medium">Owned</span>
+                      <span className="text-sm font-medium">Adquirida</span>
                     </div>
                   ) : (
                     <Button

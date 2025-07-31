@@ -8,7 +8,7 @@ export default function GameStats() {
   const { money, xp, level } = useGameStore();
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("pt-BR", {
       notation: "compact",
       compactDisplay: "short",
     }).format(num);
@@ -26,28 +26,28 @@ export default function GameStats() {
             <span className="text-2xl font-bold font-headline">
               ${formatNumber(money)}
             </span>
-            <span className="text-sm text-muted-foreground">Money</span>
+            <span className="text-sm text-muted-foreground">Dinheiro</span>
           </div>
           <div className="p-4 bg-muted/50 rounded-lg flex flex-col items-center justify-center">
             <BrainCircuit className="h-6 w-6 mb-2 text-primary" />
             <span className="text-2xl font-bold font-headline">
               {formatNumber(xp)}
             </span>
-            <span className="text-sm text-muted-foreground">Total XP</span>
+            <span className="text-sm text-muted-foreground">XP Total</span>
           </div>
           <div className="p-4 bg-muted/50 rounded-lg flex flex-col items-center justify-center">
             <BarChart className="h-6 w-6 mb-2 text-primary" />
             <span className="text-2xl font-bold font-headline">
               {level}
             </span>
-            <span className="text-sm text-muted-foreground">Level</span>
+            <span className="text-sm text-muted-foreground">Nível</span>
           </div>
         </div>
          <div className="mt-4">
             <div className="w-full bg-muted rounded-full h-2.5">
                 <div className="bg-primary h-2.5 rounded-full" style={{ width: `${xpProgress}%` }}></div>
             </div>
-            <p className="text-center text-xs mt-1 text-muted-foreground">XP to next level</p>
+            <p className="text-center text-xs mt-1 text-muted-foreground">XP para o próximo nível</p>
         </div>
       </CardContent>
     </Card>
