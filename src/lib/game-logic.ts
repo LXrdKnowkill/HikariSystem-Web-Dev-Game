@@ -1,4 +1,4 @@
-import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet } from "lucide-react";
+import { Terminal, Code, ShieldCheck, ShieldOff, type LucideIcon, Zap, Dices, Palette, Gauge, Target, Sprout, Bomb, Bug, Dna, Anchor, Brain, Wallet, HardDrive, DraftingCompass } from "lucide-react";
 
 export interface Technology {
   id: string;
@@ -142,13 +142,39 @@ export const upgrades: Upgrade[] = [
         description: "Aumenta a velocidade com que você completa projetos.",
         icon: Zap,
         levels: [
-            { cost: 250, effect: 0.25 },
-            { cost: 1250, effect: 0.50 },
-            { cost: 5000, effect: 0.75 },
-            { cost: 20000, effect: 1.0 },
-            { cost: 80000, effect: 1.25 },
-            { cost: 250000, effect: 1.5 },
-            { cost: 1000000, effect: 2.0 },
+            { cost: 250, effect: 0.5 },
+            { cost: 1250, effect: 1.0 },
+            { cost: 5000, effect: 1.5 },
+            { cost: 20000, effect: 2.0 },
+            { cost: 80000, effect: 2.5 },
+            { cost: 250000, effect: 3.0 },
+            { cost: 1000000, effect: 4.0 },
+        ]
+    },
+    {
+        id: "devSetup",
+        name: "Setup de Desenvolvimento",
+        description: "Hardware melhor significa mais poder de fogo para codificar.",
+        icon: HardDrive,
+        levels: [
+            { cost: 5000, effect: 0.5 },
+            { cost: 25000, effect: 1.0 },
+            { cost: 100000, effect: 1.5 },
+            { cost: 400000, effect: 2.0 },
+            { cost: 1200000, effect: 2.5 },
+        ]
+    },
+    {
+        id: "premiumTools",
+        name: "Suíte de Ferramentas Premium",
+        description: "Software de qualidade aumenta o valor do seu trabalho.",
+        icon: DraftingCompass,
+        levels: [
+            { cost: 4000, effect: 0.05 },
+            { cost: 18000, effect: 0.10 },
+            { cost: 75000, effect: 0.15 },
+            { cost: 300000, effect: 0.20 },
+            { cost: 900000, effect: 0.25 },
         ]
     },
     {

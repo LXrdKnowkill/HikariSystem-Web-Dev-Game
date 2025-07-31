@@ -91,12 +91,19 @@ export const useGameStore = create<GameState>()(
               (id) => technologies[id]
             );
 
+            // Calculate Speed Bonus
             const codingSpeedLevel = upgrades['codingSpeed'] || 0;
             const codingSpeedUpgrade = getUpgradeById('codingSpeed');
-            const speedBonus = codingSpeedLevel > 0 ? codingSpeedUpgrade!.levels[codingSpeedLevel-1].effect : 0;
+            const speedBonus1 = codingSpeedLevel > 0 ? codingSpeedUpgrade!.levels[codingSpeedLevel-1].effect : 0;
+
+            const devSetupLevel = upgrades['devSetup'] || 0;
+            const devSetupUpgrade = getUpgradeById('devSetup');
+            const speedBonus2 = devSetupLevel > 0 ? devSetupUpgrade!.levels[devSetupLevel-1].effect : 0;
+            
+            const totalSpeedBonus = speedBonus1 + speedBonus2;
 
             const techBonus = ownedTechs.length * 0.1;
-            const progressIncrease = (delta / 1000) * (1 + techBonus + speedBonus);
+            const progressIncrease = (delta / 1000) * (1 + techBonus + totalSpeedBonus);
 
             set((state) => {
               if (!state.currentProject) return {};
@@ -116,6 +123,12 @@ export const useGameStore = create<GameState>()(
                 if (negotiatorLevel > 0) {
                     const negotiatorUpgrade = getUpgradeById('expertNegotiator');
                     finalReward *= (1 + negotiatorUpgrade!.levels[negotiatorLevel - 1].effect);
+                }
+
+                 const premiumToolsLevel = state.upgrades['premiumTools'] || 0;
+                if (premiumToolsLevel > 0) {
+                    const premiumToolsUpgrade = getUpgradeById('premiumTools');
+                    finalReward *= (1 + premiumToolsUpgrade!.levels[premiumToolsLevel - 1].effect);
                 }
 
                 const learningLevel = state.upgrades['acceleratedLearning'] || 0;
